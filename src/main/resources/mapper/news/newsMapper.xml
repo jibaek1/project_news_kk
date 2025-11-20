@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssr.newskuku.domain.news.mapper.NewsMapper">
+
+    <!-- 전체 조회 -->
+<!--    <select id="findAll" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">-->
+<!--        SELECT news_id,-->
+<!--        title,-->
+<!--        content,-->
+<!--        url,-->
+<!--        category_id,-->
+<!--        thumb_nail,-->
+<!--        created_at,-->
+<!--        updated_at-->
+<!--        FROM news-->
+<!--        ORDER BY news_id DESC;-->
+<!--    </select>-->
+
+    <insert id="save" parameterType="com.ssr.newskuku.domain.news.News">
+        INSERT INTO news (title,content,url,category_id,thumbnail)
+        VALUES (#{title},#{content},#{url},#{categoryId},#{thumbnail});
+    </insert>
+
+    <select id="existsByUrl" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM news WHERE url = #{url}
+    </select>
+
+</mapper>
