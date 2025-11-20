@@ -35,7 +35,6 @@ dependencies {
 	// JSP 렌더링 (Spring Boot 3 + Tomcat 10.x 호환)
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
-	implementation 'org.glassfish:jakarta.el:5.0.0'
 
 	// DB
 	runtimeOnly 'com.h2database:h2'
