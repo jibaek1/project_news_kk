@@ -7,16 +7,38 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class OpenAiConfig {
+
     @Value("${openai.api-key}")
-    private String openAiKey;
+    private String apiKey;
+
+    @Value("${openai.api-url}")
+    private String apiUrl;
+
+    @Value("${openai.model}")
+    private String OpenAiModel;
 
     @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer " + openAiKey);
+            request.getHeaders().add("Authorization", "Bearer " + apiKey);
             return execution.execute(request, body);
         });
         return restTemplate;
+    }
+
+    @Bean
+    public String apiKey() {
+        return apiKey;
+    }
+
+    @Bean
+    public String OpenAiModel() {
+        return OpenAiModel;
+    }
+
+    @Bean
+    public String OpenAiUrl() {
+        return apiUrl;
     }
 }
