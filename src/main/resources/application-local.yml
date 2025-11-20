@@ -11,7 +11,7 @@ spring:
   datasource:
     # url: jdbc:h2:mem:solidtask -> 'solidtask'라는 이름의 메모리 기반 DB를 사용합니다.
     # 서버를 재시작하면 데이터는 사라집니다.
-    url: jdbc:h2:mem:newskuku
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;
     username: sa # H2 DB 기본 사용자 이름
     password: # 비밀번호는 없음
     driver-class-name: org.h2.Driver # H2 드라이버 지정
