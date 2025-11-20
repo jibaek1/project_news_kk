@@ -1,4 +1,9 @@
 package com.ssr.newskuku.domain.bookmark;
 
-public class BookMark {
+import com.ssr.newskuku._global.entity.BaseEntity;
+
+public class BookMark extends BaseEntity {
+
+    private int bookmarkId;
+
 }

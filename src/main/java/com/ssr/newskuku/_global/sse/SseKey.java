@@ -1,0 +1,7 @@
+package com.ssr.newskuku._global.sse;
+
+public class SseKey {
+    public static String generateId(Long userInfoId) {
+        return "USER_" + userInfoId;
+    }
+}
