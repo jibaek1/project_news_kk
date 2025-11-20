@@ -1,0 +1,24 @@
+package com.ssr.newskuku.domain.notice;
+
+
+import com.ssr.newskuku._global.entity.BaseEntity;
+import lombok.*;
+import org.apache.ibatis.type.Alias;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Alias("Notice")
+public class Notice extends BaseEntity {
+
+    private Long noticeId;
+    private String title;
+    private String content;
+    private Integer viewCount;
+    private Boolean isVisible;
+
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
+}
