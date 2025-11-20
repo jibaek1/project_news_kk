@@ -22,4 +22,6 @@ public class News extends BaseEntity {
     private int categoryId;
     private String thumbnail;
 
+    // 뉴스 요약
+    private String summary;
 }
