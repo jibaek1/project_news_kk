@@ -20,7 +20,12 @@
 <!--    </select>-->
 
     <insert id="save" parameterType="com.ssr.newskuku.domain.news.News">
-        INSERT INTO news (title,content,url,category_id,thumb_nail)
-        VALUES (#{title},#{content},#{url},#{categoryId},#{thumbNail});
+        INSERT INTO news (title,content,url,category_id,thumbnail)
+        VALUES (#{title},#{content},#{url},#{categoryId},#{thumbnail});
     </insert>
+
+    <select id="existsByUrl" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM news WHERE url = #{url}
+    </select>
+
 </mapper>

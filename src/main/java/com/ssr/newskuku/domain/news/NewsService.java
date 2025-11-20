@@ -30,7 +30,7 @@ public class NewsService {
             for (Element item : items) {
 
                 // 제목
-                Element titleTag = item.selectFirst("strong.tit_wrap");
+                Element titleTag = item.selectFirst("span.title01");
                 if (titleTag == null) continue;
                 String title = titleTag.text();
 
@@ -57,7 +57,7 @@ public class NewsService {
                         .content(content)
                         .url(link)
                         .categoryId(1)
-                        .thumbNail(thumb)
+                        .thumbnail(thumb)
                         .build();
                 System.out.println("news : " + news);
                 newsMapper.save(news);
