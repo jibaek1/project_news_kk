@@ -1,4 +1,5 @@
 package com.ssr.newskuku.domain.openai;
+import com.ssr.newskuku._global.config.OpenAiConfig;
 import com.ssr.newskuku.domain.openai.dto.OpenAiRequest;
 import com.ssr.newskuku.domain.openai.dto.OpenAiResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,26 +14,29 @@ import java.util.Collections;
 public class OpenAiService {
 
     private final RestTemplate restTemplate;
-    private final String apiUrl = "https://api.openai.com/v1/chat/completions";
+    private final String apiUrl;
+    private final String model;
 
-    @Value("${openai.api-key}")
-    private String apiKey;
-
-    @Value("${openai.model}")
-    private String model;
-
-    public OpenAiService(RestTemplate restTemplate) {
+    public OpenAiService(RestTemplate restTemplate,
+                         String OpenAiUrl,
+                         String OpenAiModel) {
         this.restTemplate = restTemplate;
+        this.apiUrl = OpenAiUrl;
+        this.model = OpenAiModel;
     }
 
     public String chatWithOpenAi(String userMessage) {
         OpenAiRequest.Message message = new OpenAiRequest.Message("user", userMessage);
-        OpenAiRequest request = new OpenAiRequest(model, Collections.singletonList(message), 1);
+        OpenAiRequest request = new OpenAiRequest(model,
+                Collections.singletonList(message),
+                1
+        );
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity requestEntity = new HttpEntity<>(request, headers);
+        HttpEntity<OpenAiRequest> requestEntity = new HttpEntity<>(request, headers);
+
         ResponseEntity<OpenAiResponse> response = restTemplate.exchange(
                 apiUrl,
                 HttpMethod.POST,
@@ -42,5 +46,4 @@ public class OpenAiService {
 
         return response.getBody().getChoices().get(0).getMessage().getContent();
     }
-
 }
