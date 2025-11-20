@@ -1,0 +1,5 @@
+<select id="findById" parameterType="long" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindById">
+    SELECT id, title, summary, original_url
+    FROM news_articles
+    WHERE id = #{id}
+</select>
