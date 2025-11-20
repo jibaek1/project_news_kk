@@ -1,7 +1,7 @@
 logging:
   level:
     root: INFO                # 최소 WARN 이상이어야 log.warn() 표시
-    com.coach.chiselbot: DEBUG
+    com.ssr.newskuku: DEBUG
 
 spring:
   # ===================================================================
