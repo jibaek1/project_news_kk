@@ -54,8 +54,8 @@
 
     <!-- 뉴스 저장 -->
     <insert id="save" parameterType="com.ssr.newskuku.domain.news.News">
-        INSERT INTO news (title,content,url,category_id,thumbnail,is_write,published_at)
-        VALUES (#{title},#{content},#{url},#{categoryId},#{thumbnail},#{isWrite},#{publishedAt});
+        INSERT INTO news (title,content,url,category,thumbnail,is_write,published_at)
+        VALUES (#{title},#{content},#{url},#{category},#{thumbnail},#{isWrite},#{publishedAt});
     </insert>
 
     <!-- URL 중복 체크 -->

@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.http.HttpHeaders;
-import java.util.List;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -27,7 +26,7 @@ public class NewsService {
     private final String OpenAiUrl;
 
 
-    public void crawlLatestNews () {
+    public void crawlLatestNews() {
 
         int maxPage = 5;
 
@@ -55,8 +54,16 @@ public class NewsService {
                     if (linkTag == null) continue;
                     String link = linkTag.attr("href");
 
+                    // 시간
+                    String publishedAt = item.select("span.txt-time").text();
+
+                    // 카테고리
+                    String category = item.select("a.tit01").text();
+
                     System.out.println("제목: " + title);
                     System.out.println("링크: " + link);
+                    System.out.println("시간: " + publishedAt);
+                    System.out.println("카테고리: " + category);
 
                     if (newsMapper.existsByUrl(link) > 0) {
                         System.out.println("이미 저장된 기사 -> 스킵");
@@ -67,13 +74,12 @@ public class NewsService {
 
                     String content = detail.select(".story-news.article p").text();
                     String thumb = detail.select(".img-con01 img").attr("src");
-                    String publishedAt = detail.select("span.txt-time").text();
 
                     News news = News.builder()
                             .title(title)
                             .content(content)
                             .url(link)
-                            .categoryId(1)
+                            .category(category)
                             .thumbnail(thumb)
                             .isWrite(true)
                             .publishedAt(publishedAt)

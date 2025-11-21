@@ -21,7 +21,7 @@ public class News extends BaseEntity {
     private String title;
     private String content;
     private String url;
-    private int categoryId;
+    private String category;
     private String thumbnail;
     private boolean isWrite;
     private String publishedAt;
