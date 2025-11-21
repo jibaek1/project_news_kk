@@ -71,3 +71,8 @@ server:
   jsp-servlet:
     init-parameters:
       development: false
+
+openai:
+  api-key: ${OPENAI_API_KEY} # 실제 OpenAi 대시보드에서 발급받은 API KEY 입력
+  api-url: https://api.openai.com/v1/chat/completions # GPT 대화용 API URL
+  model: gpt-5-nano # 사용할 모델

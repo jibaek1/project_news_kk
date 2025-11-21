@@ -29,13 +29,16 @@ repositories {
 }
 
 dependencies {
+
+	// Jsoup
+	implementation 'org.jsoup:jsoup:1.18.1'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
 
 	// JSP 렌더링 (Spring Boot 3 + Tomcat 10.x 호환)
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
-	implementation 'org.glassfish:jakarta.el:5.0.0'
 
 	// DB
 	runtimeOnly 'com.h2database:h2'
@@ -44,6 +47,9 @@ dependencies {
 	// 기타
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+    // OpenAI
+    implementation "com.openai:openai-java:4.6.1"
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
