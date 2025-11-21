@@ -36,9 +36,9 @@ public class NewsController {
     public String summarize() {
         try {
             newsService.generateSummaries();
-            return "✅ AI 요약 완료!";
+            return "AI 요약 완료!";
         } catch (Exception e) {
-            return "❌ AI 요약 실패: " + e.getMessage();
+            return "AI 요약 실패: " + e.getMessage();
         }
     }
 
