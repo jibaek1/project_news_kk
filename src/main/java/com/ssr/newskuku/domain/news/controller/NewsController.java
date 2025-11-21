@@ -23,7 +23,7 @@ public class NewsController {
      * 임시 크롤링 API
      * @return
      */
-    @GetMapping("/admin/clawl")
+    @GetMapping("/admin/crawl")
     @ResponseBody
     public String crawl() {
         newsService.crawlLatestNews();
@@ -48,20 +48,5 @@ public class NewsController {
         NewsResponse.FindById news = newsService.getNewsId(id);
         model.addAttribute("news", news);
         return "news/detail";  // JSP 페이지
-    }
-
-    // ai 테스트 용도 추후 삭제 예정
-    @PostMapping("{newsId}/summarize")
-    public String summarizeNews(@PathVariable Long newsId) {
-        News news = newsMapper.selectNewsById(newsId);
-
-        // AI 요약 호출
-        String summary = openAiService.getSummary(news.getContent());
-
-        // DB에 저장 & is_write 업데이트
-        newsMapper.insertNewsSummary(news.getNewsId(), summary, (long) news.getCategoryId());
-        newsMapper.updateIsWrite(news.getNewsId(), 1);
-
-        return "redirect:/news/detail/" + newsId;
     }
 }
