@@ -40,11 +40,6 @@
                 </tr>
 
                 <tr>
-                    <th>내용</th>
-                    <td style="white-space: pre-line;">${news.content}</td>
-                </tr>
-
-                <tr>
                     <th>원문 링크</th>
                     <td>
                         <a href="${news.url}" target="_blank">기사 원문 보기</a>
