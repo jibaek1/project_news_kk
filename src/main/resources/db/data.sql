@@ -81,23 +81,22 @@ CREATE TABLE news (
     title VARCHAR(500) NOT NULL COMMENT '뉴스 제목',
     content TEXT NOT NULL COMMENT '뉴스 원문 본문',
     url VARCHAR(500) NOT NULL COMMENT '원본 뉴스 URL',
-    category_id BIGINT NOT NULL COMMENT '카테고리 번호 (FK)',
+    category VARCHAR(20) NOT NULL COMMENT '카테고리',
     thumbnail VARCHAR(500) NULL COMMENT '썸네일 이미지 URL',
     is_write TINYINT(1) NOT NULL DEFAULT 0 COMMENT '기사화 등록 여부 (1=등록,0=미등록)',
     summary VARCHAR(4000) NULL COMMENT '뉴스 요약',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
 
+    published_at VARCHAR(20) NULL COMMENT '기사 작성 시간',
     PRIMARY KEY (news_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO news
-(title, content, url, category_id, thumbnail, is_write)
+INSERT INTO news (title, content, url, category, thumbnail, is_write, published_at)
 VALUES
-    ('AI 기술 뉴스 요약', '오늘의 AI 관련 소식입니다...', 'https://news.example.com/ai1', 1, 'https://cdn.example.com/thumb_ai1.png', 1),
-    ('정책 변경 안내', '정부 정책 관련 최신 뉴스...', 'https://news.example.com/policy', 2, NULL, 0);
-
-
+('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '정치', NULL, 0, '11-21 10:23'),
+('두 번째 뉴스 제목', '두 번째 뉴스 본문 내용입니다.', 'https://news.example.com/2', '정치', NULL, 0, '11-21 11:01'),
+('세 번째 뉴스 제목', '세 번째 뉴스 본문 내용입니다.', 'https://news.example.com/3', '정치', NULL, 0, '11-21 08:55');
 
 DROP TABLE IF EXISTS user_bookmark;
 CREATE TABLE user_bookmark (

@@ -16,8 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/news")
 public class NewsController {
     private final NewsService newsService;
-    private final NewsMapper newsMapper;
-    private final OpenAiService openAiService;
 
     /**
      * 임시 크롤링 API
@@ -28,18 +26,6 @@ public class NewsController {
     public String crawl() {
         newsService.crawlLatestNews();
         return "크롤링 완료";
-    }
-
-    // 요약 생성
-    @GetMapping("/admin/summarize")
-    @ResponseBody
-    public String summarize() {
-        try {
-            newsService.generateSummaries();
-            return "✅ AI 요약 완료!";
-        } catch (Exception e) {
-            return "❌ AI 요약 실패: " + e.getMessage();
-        }
     }
 
     // 상세보기

@@ -21,21 +21,8 @@ public class NewsResponse {
         private String content;
         private String summary;
         private String url;
-        private Long categoryId;
+        private String category;
         private String createdAt;
         private String modifiedAt;
-
-        // 컬럼 단위 생성자
-        public FindById(Long newsId, String title, String content, String url, Long categoryId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-            this.newsId = newsId;
-            this.title = title;
-            this.content = content;
-            this.url = url;
-            this.categoryId = categoryId;
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            this.createdAt = createdAt != null ? createdAt.format(formatter) : null;
-            this.modifiedAt = modifiedAt != null ? modifiedAt.format(formatter) : null;
-        }
     }
 }

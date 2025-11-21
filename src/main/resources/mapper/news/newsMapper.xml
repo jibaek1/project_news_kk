@@ -6,18 +6,18 @@
 <mapper namespace="com.ssr.newskuku.domain.news.mapper.NewsMapper">
 
     <!-- 전체 조회 -->
-<!--    <select id="findAll" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">-->
-<!--        SELECT news_id,-->
-<!--        title,-->
-<!--        content,-->
-<!--        url,-->
-<!--        category_id,-->
-<!--        thumb_nail,-->
-<!--        created_at,-->
-<!--        updated_at-->
-<!--        FROM news-->
-<!--        ORDER BY news_id DESC;-->
-<!--    </select>-->
+    <!--    <select id="findAll" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">-->
+    <!--        SELECT news_id,-->
+    <!--        title,-->
+    <!--        content,-->
+    <!--        url,-->
+    <!--        category_id,-->
+    <!--        thumb_nail,-->
+    <!--        created_at,-->
+    <!--        updated_at-->
+    <!--        FROM news-->
+    <!--        ORDER BY news_id DESC;-->
+    <!--    </select>-->
 
     <!-- summary가 null인 뉴스 조회 -->
     <select id="findNewsWithoutSummary" resultType="com.ssr.newskuku.domain.news.News">
@@ -28,7 +28,7 @@
             summary,
             url,
             thumbnail,
-            category_id as categoryId,
+            category,
             created_at as createdAt,
             modified_at as modifiedAt
         FROM news
@@ -45,7 +45,7 @@
             summary,
             url,
             thumbnail,
-            category_id as categoryId,
+            category,
             FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
             FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
         FROM news
@@ -54,8 +54,8 @@
 
     <!-- 뉴스 저장 -->
     <insert id="save" parameterType="com.ssr.newskuku.domain.news.News">
-        INSERT INTO news (title, content, summary, url, category_id, thumbnail)
-        VALUES (#{title}, #{content}, #{summary}, #{url}, #{categoryId}, #{thumbnail});
+        INSERT INTO news (title,content,url,category,thumbnail,is_write,published_at)
+        VALUES (#{title},#{content},#{url},#{category},#{thumbnail},#{isWrite},#{publishedAt});
     </insert>
 
     <!-- URL 중복 체크 -->
