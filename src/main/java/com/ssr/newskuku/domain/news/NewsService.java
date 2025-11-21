@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class NewsService {
 
     private final NewsMapper newsMapper;
