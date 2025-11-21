@@ -28,7 +28,7 @@
             summary,
             url,
             thumbnail,
-            category_id as categoryId,
+            category,
             created_at as createdAt,
             modified_at as modifiedAt
         FROM news
@@ -45,7 +45,7 @@
             summary,
             url,
             thumbnail,
-            category_id as categoryId,
+            category_id,
             FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
             FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
         FROM news

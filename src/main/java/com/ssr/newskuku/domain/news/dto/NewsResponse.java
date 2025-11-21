@@ -21,7 +21,7 @@ public class NewsResponse {
         private String content;
         private String summary;
         private String url;
-        private Long categoryId;
+        private Long category;
         private String createdAt;
         private String modifiedAt;
     }
