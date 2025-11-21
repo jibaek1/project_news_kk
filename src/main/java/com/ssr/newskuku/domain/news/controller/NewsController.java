@@ -8,10 +8,7 @@ import com.ssr.newskuku.domain.openai.OpenAiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -27,9 +24,22 @@ public class NewsController {
      * @return
      */
     @GetMapping("/admin/clawl")
+    @ResponseBody
     public String crawl() {
         newsService.crawlLatestNews();
         return "크롤링 완료";
+    }
+
+    // 요약 생성
+    @GetMapping("/admin/summarize")
+    @ResponseBody
+    public String summarize() {
+        try {
+            newsService.generateSummaries();
+            return "✅ AI 요약 완료!";
+        } catch (Exception e) {
+            return "❌ AI 요약 실패: " + e.getMessage();
+        }
     }
 
     // 상세보기

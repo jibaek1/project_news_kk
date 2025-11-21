@@ -64,14 +64,10 @@ public class NewsService {
                 String content = detail.select(".story-news.article p").text();
                 String thumb = detail.select(".img-con01 img").attr("src");
 
-                // AI 연동 요약
-                String summary = summaryWithOpenAi(content);
-
 
                 News news = News.builder()
                         .title(title)
                         .content(content)
-                        .summary(summary)
                         .url(link)
                         .categoryId(1)
                         .thumbnail(thumb)
@@ -84,6 +80,38 @@ public class NewsService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 요약되지 않은 뉴스에 ai 추가
+    public void generateSummaries() {
+        // summary가 null인 뉴스 조회
+        List<News> newsWithoutSummary = newsMapper.findNewsWithoutSummary();
+
+        System.out.println("========================================");
+        System.out.println("AI 요약 시작! 총 " + newsWithoutSummary.size() + "개");
+        System.out.println("========================================");
+
+        int successCount = 0;
+
+        for (News news : newsWithoutSummary) {
+            try {
+                System.out.println("\n🤖 요약 중: " + news.getTitle());
+
+                String summary = summaryWithOpenAi(news.getContent());
+
+                newsMapper.updateNewsSummary(news.getNewsId(), summary);
+                successCount++;
+
+                System.out.println("✅ 요약 완료 (" + successCount + "/" + newsWithoutSummary.size() + ")");
+
+            } catch (Exception e) {
+                System.err.println("❌ AI 요약 실패: " + e.getMessage());
+            }
+        }
+
+        System.out.println("\n========================================");
+        System.out.println("🎉 AI 요약 완료! 총 " + successCount + "개");
+        System.out.println("========================================");
     }
 
     // Open Ai 호출
