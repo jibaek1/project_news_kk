@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,7 @@ public class News extends BaseEntity {
     private String url;
     private int categoryId;
     private String thumbnail;
+    private boolean isWrite;
+    private String publishedAt;
 
 }
