@@ -9,7 +9,7 @@
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
 
-        <h2 class="mb-4">뉴스 상세보기</h2>
+        <h2 class="mb-4">뉴스 상세보기 임시입니다</h2>
 
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <table border="1" cellspacing="0" cellpadding="8">
@@ -62,23 +62,6 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-
-        <!-- AI 요약 버튼 -->
-        <div class="mt-2 mb-4">
-            <!-- 요약이 없을 때만 버튼 표시 -->
-            <c:if test="${empty news.summary}">
-                <form action="/news/${news.newsId}/summarize" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-primary">AI 요약 생성</button>
-                </form>
-            </c:if>
-
-            <!-- 요약이 있을 때는 재생성 버튼 표시 -->
-            <c:if test="${not empty news.summary}">
-                <form action="/news/${news.newsId}/summarize" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-warning">AI 요약 재생성</button>
-                </form>
-            </c:if>
         </div>
 
         <!-- 뒤로가기 버튼 -->
