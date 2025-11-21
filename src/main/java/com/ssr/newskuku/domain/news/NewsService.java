@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -28,6 +30,104 @@ public class NewsService {
     private final RestTemplate restTemplate;
     private final String OpenAiModel;
     private final String OpenAiUrl;
+
+
+    private boolean isTodayArticle(String textTime) {
+        // textTime: "11-21 15:47"
+        if (textTime == null || textTime.isBlank()) return false;
+
+        try {
+            String datePart = textTime.split(" ")[0]; // "11-21"
+
+            String today = LocalDate.now()
+                    .format(DateTimeFormatter.ofPattern("MM-dd"));
+
+            return datePart.equals(today);
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void crawlAllCategoriesLatestNews() {
+
+        List<String> categoryUrls = List.of(
+                "https://www.yna.co.kr/politics/all",
+                "https://www.yna.co.kr/economy/all",
+                "https://www.yna.co.kr/market-plus/all",
+                "https://www.yna.co.kr/industry/all",
+                "https://www.yna.co.kr/society/all",
+                "https://www.yna.co.kr/local/all",
+                "https://www.yna.co.kr/world/all",
+                "https://www.yna.co.kr/culture/all",
+                "https://www.yna.co.kr/health/all",
+                "https://www.yna.co.kr/entertainment/all",
+                "https://www.yna.co.kr/sports/all"
+        );
+
+        int maxPage = 5;
+
+        for (String baseUrl : categoryUrls) {
+            crawlCategory(baseUrl,maxPage);
+        }
+    }
+
+    private void crawlCategory(String categoryUrl,int maxPage) {
+
+        for (int page = 1; page <= maxPage; page++) {
+
+            String url = categoryUrl + "/" + page;
+
+        }
+
+        try {
+
+            Document doc = Jsoup.connect(categoryUrl).get();
+
+            Elements items = doc.select("div.news-con");
+
+            for (Element item : items) {
+
+                String title = item.select("span.title01").text();
+                String link = item.select("a.tit-news").attr("href");
+                String publishedAt = item.select("span.txt-time").text();
+                String category = item.select("a.tit01").text();
+
+                if (newsMapper.existsByUrl(link) > 0) continue;
+
+                Document detail = Jsoup.connect(link).get();
+                String content = detail.select(".story-news.article p").text();
+                String thumb = detail.select(".img-con01 img").attr("src");
+
+                // 오늘 기사만
+                if (!isTodayArticle(publishedAt)) {
+                    System.out.println("오늘 기사 아님 → 스킵: " + publishedAt);
+                    continue;
+                }
+
+                // 시간이 없는 기사 → 광고/특수기사 → 스킵
+                if (publishedAt.isBlank()) {
+                    System.out.println("시간 없는 기사 → 제외");
+                    continue;
+                }
+
+                News news = News.builder()
+                        .title(title)
+                        .content(content)
+                        .url(link)
+                        .category(category)
+                        .thumbnail(thumb)
+                        .isWrite(true)
+                        .publishedAt(publishedAt)
+                        .build();
+
+                newsMapper.save(news);
+            }
+        } catch (Exception e) {
+            System.out.println("크롤링 오류: " + e.getMessage());
+        }
+    }
+
 
 
     public void crawlLatestNews() {
@@ -64,6 +164,8 @@ public class NewsService {
                     // 카테고리
                     String category = item.select("a.tit01").text();
 
+
+
                     System.out.println("제목: " + title);
                     System.out.println("링크: " + link);
                     System.out.println("시간: " + publishedAt);
@@ -78,6 +180,7 @@ public class NewsService {
 
                     String content = detail.select(".story-news.article p").text();
                     String thumb = detail.select(".img-con01 img").attr("src");
+
 
                     News news = News.builder()
                             .title(title)
