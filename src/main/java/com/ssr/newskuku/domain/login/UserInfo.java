@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +23,6 @@ public class UserInfo extends BaseEntity {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
+    private String mobile;
+    private List<UserCategory> categories;
 }

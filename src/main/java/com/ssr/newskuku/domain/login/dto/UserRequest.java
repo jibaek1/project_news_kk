@@ -1,5 +1,6 @@
 package com.ssr.newskuku.domain.login.dto;
 
+import com.ssr.newskuku.domain.login.Status;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,12 +28,11 @@ public class UserRequest {
         private String email;
         private String provider;
         private String socialId;
-
         private String profileImage;
         private LocalDate birthDate;
         private String gender;
         private String nickname;
-
+        private String mobile;
         private List<Integer> categoryIds;
     }
 
@@ -41,9 +41,8 @@ public class UserRequest {
     @ToString
     public static class UpdateProfile {
         private String profileImage;
-        private LocalDate birthDate;
-        private String gender;
         private String nickname;
+        private String mobile;
     }
 
     @Getter
@@ -53,18 +52,10 @@ public class UserRequest {
         private List<Integer> categoryIds;
     }
 
-
-    @Getter
-    @Setter
-    @ToString
-    public static class UpdateNickname {
-        private String nickname;
-    }
-
     @Getter
     @Setter
     @ToString
     public static class UpdateStatus {
-        private String status;
+        private Status status;
     }
 }

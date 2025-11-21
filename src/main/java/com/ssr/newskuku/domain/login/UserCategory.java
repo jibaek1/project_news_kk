@@ -13,6 +13,7 @@ import org.apache.ibatis.type.Alias;
 @Builder
 @Alias("user_category")
 public class UserCategory extends BaseEntity {
+
     private Long userCategoryId;
     private Long userId;
     private Long categoryId;

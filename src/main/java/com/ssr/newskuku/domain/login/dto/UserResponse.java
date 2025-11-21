@@ -48,16 +48,19 @@ public class UserResponse {
         private final String gender;
         private final String nickname;
         private final Integer age;
+        private final String mobile;
+        private List<Integer> categoryIds;
         private final String createdAt;
 
-        public ProfileInfo(UserInfo info) {
+        public ProfileInfo(UserInfo info, List<Integer> categoryIds) {
             this.userId = info.getUserId();
             this.profileImage = info.getProfileImage();
             this.birthDate = info.getBirthDate();
             this.gender = info.getGender() != null ? info.getGender().name() : null;
             this.nickname = info.getNickname();
             this.age = calculateAge(info.getBirthDate());
-
+            this.mobile = info.getMobile();
+            this.categoryIds = categoryIds;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             this.createdAt = info.getCreatedAt() != null
                     ? info.getCreatedAt().format(formatter)
@@ -89,10 +92,7 @@ public class UserResponse {
         private String gender;
         private String nickname;
         private Integer age;
-
-        // Category 정보
         private List<Integer> categoryIds;
-
         private String createdAt;
         private String modifiedAt;
 
