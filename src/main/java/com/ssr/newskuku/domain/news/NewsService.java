@@ -11,14 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.http.HttpHeaders;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class NewsService {
 
     private final NewsMapper newsMapper;
@@ -87,39 +90,68 @@ public class NewsService {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("크롤링 완료!");
+        System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
+        generateSummaries();
     }
 
     // 요약되지 않은 뉴스에 ai 추가
     public void generateSummaries() {
-        // summary가 null인 뉴스 조회
         List<News> newsWithoutSummary = newsMapper.findNewsWithoutSummary();
 
         System.out.println("AI 요약 시작! 총 " + newsWithoutSummary.size() + "개");
 
-        int successCount = 0;
+        // 스레드 풀 생성 (최대 10개 동시 실행)
+        ExecutorService executor = Executors.newFixedThreadPool(10);
 
+        // 완료 개수 추적 (멀티스레드 안전)
+        AtomicInteger successCount = new AtomicInteger(0);
+        int totalCount = newsWithoutSummary.size();
+
+        // 비동기 작업 리스트
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        // 각 뉴스마다 비동기 작업 생성
         for (News news : newsWithoutSummary) {
-            try {
-                System.out.println("\n 요약 중: " + news.getTitle());
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                try {
+                    System.out.println("요약 중: " + news.getTitle());
 
-                String summary = summaryWithOpenAi(news.getContent());
+                    String summary = summaryWithOpenAi(news.getContent());
 
-                newsMapper.updateNewsSummary(news.getNewsId(), summary);
-                successCount++;
+                    if (summary != null) {
+                        summarizeAndSaveOne(news.getNewsId(), summary);
+                        int completed = successCount.incrementAndGet();
+                        System.out.println("요약 완료 (" + completed + "/" + totalCount + ")");
+                    }
 
-                System.out.println("요약 완료 (" + successCount + "/" + newsWithoutSummary.size() + ")");
+                } catch (Exception e) {
+                    System.err.println("AI 요약 실패: " + e.getMessage());
+                }
+            }, executor);
 
-            } catch (Exception e) {
-                System.err.println("AI 요약 실패: " + e.getMessage());
-            }
+            futures.add(future);
         }
 
-        System.out.println("AI 요약 완료! 총 " + successCount + "개");
+        // 모든 작업 완료 대기
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        // 스레드 풀 종료
+        executor.shutdown();
+
+        System.out.println(" AI 요약 완료! 총 " + successCount.get() + "개");
     }
+
+    // 개별 저장 (트랜잭션 분리)
+    @Transactional
+    public void summarizeAndSaveOne(Long newsId, String summary) {
+        newsMapper.updateNewsSummary(newsId, summary);
+    }
+
 
     // Open Ai 호출
     private String summaryWithOpenAi(String content) {
-        String prompt = "다음 뉴스를 5줄 이하로 요약해줘:\n\n" + content;
+        String prompt = "다음 뉴스를 3줄 이하로 요약해줘:\n\n" + content;
 
         Map<String, Object> request = Map.of(
                 "model", OpenAiModel,
