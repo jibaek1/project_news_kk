@@ -87,9 +87,7 @@ public class NewsService {
         // summary가 null인 뉴스 조회
         List<News> newsWithoutSummary = newsMapper.findNewsWithoutSummary();
 
-        System.out.println("========================================");
         System.out.println("AI 요약 시작! 총 " + newsWithoutSummary.size() + "개");
-        System.out.println("========================================");
 
         int successCount = 0;
 
@@ -102,16 +100,14 @@ public class NewsService {
                 newsMapper.updateNewsSummary(news.getNewsId(), summary);
                 successCount++;
 
-                System.out.println("✅ 요약 완료 (" + successCount + "/" + newsWithoutSummary.size() + ")");
+                System.out.println("요약 완료 (" + successCount + "/" + newsWithoutSummary.size() + ")");
 
             } catch (Exception e) {
-                System.err.println("❌ AI 요약 실패: " + e.getMessage());
+                System.err.println("AI 요약 실패: " + e.getMessage());
             }
         }
 
-        System.out.println("\n========================================");
-        System.out.println("🎉 AI 요약 완료! 총 " + successCount + "개");
-        System.out.println("========================================");
+        System.out.println("AI 요약 완료! 총 " + successCount + "개");
     }
 
     // Open Ai 호출
