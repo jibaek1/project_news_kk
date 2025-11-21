@@ -84,6 +84,10 @@ CREATE TABLE news (
     category_id BIGINT NOT NULL COMMENT '카테고리 번호 (FK)',
     thumbnail VARCHAR(500) NULL COMMENT '썸네일 이미지 URL',
     is_write TINYINT(1) NOT NULL DEFAULT 0 COMMENT '기사화 등록 여부 (1=등록,0=미등록)',
+    summary VARCHAR(4000) NULL COMMENT '뉴스 요약',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+    modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+
     published_at VARCHAR(20) NULL COMMENT '기사 작성 시간',
     PRIMARY KEY (news_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

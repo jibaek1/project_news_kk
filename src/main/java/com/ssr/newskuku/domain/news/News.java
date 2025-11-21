@@ -26,4 +26,6 @@ public class News extends BaseEntity {
     private boolean isWrite;
     private String publishedAt;
 
+    // 뉴스 요약
+    private String summary;
 }

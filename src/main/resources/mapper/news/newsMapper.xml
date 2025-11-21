@@ -19,13 +19,57 @@
     <!--        ORDER BY news_id DESC;-->
     <!--    </select>-->
 
+    <!-- summary가 null인 뉴스 조회 -->
+    <select id="findNewsWithoutSummary" resultType="com.ssr.newskuku.domain.news.News">
+        SELECT
+            news_id as newsId,
+            title,
+            content,
+            summary,
+            url,
+            thumbnail,
+            category_id as categoryId,
+            created_at as createdAt,
+            modified_at as modifiedAt
+        FROM news
+        WHERE summary IS NULL
+        ORDER BY news_id ASC
+    </select>
+
+    <!-- 상세 조회 -->
+    <select id="findById" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindById">
+        SELECT
+            news_id as newsId,
+            title,
+            content,
+            summary,
+            url,
+            thumbnail,
+            category_id as categoryId,
+            FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
+            FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
+        FROM news
+        WHERE news_id = #{id}
+    </select>
+
+    <!-- 뉴스 저장 -->
     <insert id="save" parameterType="com.ssr.newskuku.domain.news.News">
         INSERT INTO news (title,content,url,category_id,thumbnail,is_write,published_at)
         VALUES (#{title},#{content},#{url},#{categoryId},#{thumbnail},#{isWrite},#{publishedAt});
     </insert>
 
+    <!-- URL 중복 체크 -->
     <select id="existsByUrl" parameterType="string" resultType="int">
         SELECT COUNT(*) FROM news WHERE url = #{url}
     </select>
+
+    <!-- AI 요약 업데이트 -->
+    <update id="updateNewsSummary">
+        UPDATE news
+        SET summary = #{summary},
+            modified_at = CURRENT_TIMESTAMP
+        WHERE news_id = #{newsId}
+    </update>
+
 
 </mapper>
