@@ -13,13 +13,10 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Service;
 
-
-
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 
 
 @Service
@@ -31,6 +28,7 @@ public class NewsService {
     private final Job summarizeNewsJob;
 
 
+    // 오늘 기사만 크롤링 하도록 처리
     private boolean isTodayArticle(String textTime) {
         // textTime: "11-21 15:47"
         if (textTime == null || textTime.isBlank()) return false;
@@ -48,6 +46,8 @@ public class NewsService {
         }
     }
 
+
+    // 뉴스 카테고리별 처리 크롤링 처리
     public void crawlAllCategoriesLatestNews() {
 
         List<String> categoryUrls = List.of(
@@ -67,66 +67,74 @@ public class NewsService {
         int maxPage = 5;
 
         for (String baseUrl : categoryUrls) {
-            crawlCategory(baseUrl,maxPage);
+            crawlCategory(baseUrl, maxPage);
         }
     }
 
-    private void crawlCategory(String categoryUrl,int maxPage) {
+    private void crawlCategory(String categoryUrl, int maxPage) {
 
         for (int page = 1; page <= maxPage; page++) {
 
             String url = categoryUrl + "/" + page;
 
-        }
 
-        try {
+            try {
 
-            Document doc = Jsoup.connect(categoryUrl).get();
+                Document doc = Jsoup.connect(url).get();
 
-            Elements items = doc.select("div.news-con");
+                Elements items = doc.select("div.news-con");
 
-            for (Element item : items) {
+                for (Element item : items) {
 
-                String title = item.select("span.title01").text();
-                String link = item.select("a.tit-news").attr("href");
-                String publishedAt = item.select("span.txt-time").text();
-                String category = item.select("a.tit01").text();
+                    // 제목
+                    String title = item.select("span.title01").text();
+                    // 링크
+                    String link = item.select("a.tit-news").attr("href");
+                    // 시간
+                    String publishedAt = item.select("span.txt-time").text();
 
-                if (newsMapper.existsByUrl(link) > 0) continue;
+                    if (newsMapper.existsByUrl(link) > 0) continue;
 
-                Document detail = Jsoup.connect(link).get();
-                String content = detail.select(".story-news.article p").text();
-                String thumb = detail.select(".img-con01 img").attr("src");
+                    // 상세 페이지
+                    Document detail = Jsoup.connect(link).get();
+                    // 내용
+                    String content = detail.select(".story-news.article p").text();
+                    // 썸네일
+                    String thumb = detail.select(".img-con01 img").attr("src");
+                    // 카테고리
+                    String category = detail.select(".nav-path01 a[data-stat-code=bread_crumb]")
+                            .first()
+                            .text();
 
-                // 오늘 기사만
-                if (!isTodayArticle(publishedAt)) {
-                    System.out.println("오늘 기사 아님 → 스킵: " + publishedAt);
-                    continue;
+                    // 오늘 기사만
+                    if (!isTodayArticle(publishedAt)) {
+                        System.out.println("오늘 기사 아님 → 스킵: " + publishedAt);
+                        continue;
+                    }
+
+                    // 시간이 없는 기사 → 광고/특수기사 → 스킵
+                    if (publishedAt.isBlank()) {
+                        System.out.println("시간 없는 기사 → 제외");
+                        continue;
+                    }
+
+                    News news = News.builder()
+                            .title(title)
+                            .content(content)
+                            .url(link)
+                            .category(category)
+                            .thumbnail(thumb)
+                            .isWrite(true)
+                            .publishedAt(publishedAt)
+                            .build();
+
+                    newsMapper.save(news);
                 }
-
-                // 시간이 없는 기사 → 광고/특수기사 → 스킵
-                if (publishedAt.isBlank()) {
-                    System.out.println("시간 없는 기사 → 제외");
-                    continue;
-                }
-
-                News news = News.builder()
-                        .title(title)
-                        .content(content)
-                        .url(link)
-                        .category(category)
-                        .thumbnail(thumb)
-                        .isWrite(true)
-                        .publishedAt(publishedAt)
-                        .build();
-
-                newsMapper.save(news);
+            } catch (Exception e) {
+                System.out.println("크롤링 오류: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println("크롤링 오류: " + e.getMessage());
         }
     }
-
 
 
     public void crawlLatestNews() {
@@ -162,7 +170,6 @@ public class NewsService {
 
                     // 카테고리
                     String category = item.select("a.tit01").text();
-
 
 
                     System.out.println("제목: " + title);
