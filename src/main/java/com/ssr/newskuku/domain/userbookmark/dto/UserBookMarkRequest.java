@@ -1,26 +1,23 @@
-package com.ssr.newskuku.domain.bookmark.dto;
+package com.ssr.newskuku.domain.userbookmark.dto;
 
-import com.ssr.newskuku.domain.news.News;
 import lombok.Data;
 
-public class BookMarkRequest {
+public class UserBookMarkRequest {
 
     @Data
     public static class createBookMark {
         private Long BookMarkId;
         private Long userInfoId;
-        private News news;
+        private Long newsId;
         private String createdAt;
-        private boolean status;
     }
 
     @Data
     public static class deleteBookMark {
         private Long BookMarkId;
         private Long userInfoId;
-        private News news;
+        private Long newsId;
         private String createdAt;
     }
-
 
 }

@@ -1,6 +1,6 @@
-package com.ssr.newskuku.domain.bookmark.dto;
+package com.ssr.newskuku.domain.userbookmark.dto;
 
-import com.ssr.newskuku.domain.bookmark.BookMark;
+import com.ssr.newskuku.domain.userbookmark.UserBookMark;
 import com.ssr.newskuku.domain.news.News;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,10 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BookMarkResponse {
+public class UserBookMarkResponse {
 
     @Getter
     public static class FindById {
@@ -20,13 +18,13 @@ public class BookMarkResponse {
         private final Long newsId;
         private final String createdAt;
 
-        public FindById(BookMark bookMark, Long userInfoId, Long newsId) {
-            this.BookMarkId = bookMark.getBookmarkId();
+        public FindById(UserBookMark userBookMark, Long userInfoId, Long newsId) {
+            this.BookMarkId = userBookMark.getBookmarkId();
             this.userInfoId = userInfoId;
             this.newsId = newsId;
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            this.createdAt = bookMark.getCreatedAt() != null ? bookMark.getCreatedAt().format(formatter) : null;
+            this.createdAt = userBookMark.getCreatedAt() != null ? userBookMark.getCreatedAt().format(formatter) : null;
         }
 
         private String nvl(String value) {
@@ -46,24 +44,24 @@ public class BookMarkResponse {
         private String title;
         private String summary;
         private String url;
-        private int categoryId;
+        private String category;
         private String thumbNail;
 
-        public FindAll(BookMark bookMark, News news) {
-            this.bookMarkId = bookMark.getBookmarkId();
+        public FindAll(UserBookMark userBookMark, News news) {
+            this.bookMarkId = userBookMark.getBookmarkId();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            this.createdAt = bookMark.getCreatedAt() != null ? bookMark.getCreatedAt().format(formatter) : null;
+            this.createdAt = userBookMark.getCreatedAt() != null ? userBookMark.getCreatedAt().format(formatter) : null;
 
             this.newsId = news.getNewsId();
             this.title = news.getTitle();
             this.url = news.getUrl();
-            this.categoryId = news.getCategoryId();
+            this.category = news.getCategory();
             this.thumbNail = news.getThumbnail();
 
         }
 
-        public static FindAll from(BookMark bookMark, News news){return new FindAll(bookMark, news);}
+        public static FindAll from(UserBookMark userBookMark, News news){return new FindAll(userBookMark, news);}
 
 //        public static List<FindAll> from(List<BookMark> bookMarks, List<News> news) {
 //            List<FindAll> dtoList = new ArrayList<>();

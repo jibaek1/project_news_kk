@@ -3,43 +3,43 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ssr.newskuku.domain.bookmark.mapper.BookMarkMapper">
+<mapper namespace="com.ssr.newskuku.domain.userbookmark.mapper.UserBookMarkMapper">
 
     <!-- 전체 조회 -->
-    <select id="findAll" resultType="com.ssr.newskuku.domain.bookmark.dto.BookMarkResponse$FindAll">
+    <select id="findAll" resultType="com.ssr.newskuku.domain.userbookmark.dto.UserBookMarkResponse$FindAll">
         SELECT b.bookmark_id,
         n.news_id,
         n.title,
         n.thumbnail,
         n.summary,
         n.url,
-        n.categoryId,
+        n.category,
         n.created_at AS news_created_at,
         b.created_at AS bookmarked_at
-        FROM bookmarks b
+        FROM user_bookmark b
         JOIN news n ON b.news_id = n.news_id
         WHERE b.user_info_id = #{userInfoId}
         ORDER BY bookmark_id DESC;
     </select>
 
     <!-- 북마크 존재여부 -->
-    <select id="findByUserAndNews" resultType="com.ssr.newskuku.domain.bookmark.BookMark">
-        SELECT bookmark_id AS bookmarkID,
+    <select id="findByUserAndNews">
+        SELECT bookmark_id AS bookmarkId,
         user_info_id AS userInfoId,
         news_id AS newsId,
         created_at AS createdAt
-        FROM bookmark
-        WHERE user_id = #{userInfoId} AND news_id = #{newsId}
+        FROM user_bookmark
+        WHERE user_info_id = #{userInfoId} AND news_id = #{newsId}
     </select>
 
     <!--    북마크 생성 -->
-    <select id="createBookMark">
-        INSERT INTO bookmark (user_info_id, news_id)
+    <select id="insertBookMark">
+        INSERT INTO user_bookmark (user_info_id, news_id)
         VALUES (#{userInfoId}, #{newsId});
     </select>
     <!--  북마크 삭제 -->
     <select id="deleteBookMark">
-        DELETE FROM bookmark
+        DELETE FROM user_bookmark
         WHERE user_info_id = #{userInfoId} AND news_id = #{newsId};
     </select>
 

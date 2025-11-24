@@ -33,6 +33,7 @@ dependencies {
 	// Jsoup
 	implementation 'org.jsoup:jsoup:1.18.1'
 
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
 

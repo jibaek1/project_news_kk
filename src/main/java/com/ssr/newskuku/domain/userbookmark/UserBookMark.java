@@ -1,7 +1,6 @@
-package com.ssr.newskuku.domain.bookmark;
+package com.ssr.newskuku.domain.userbookmark;
 
 import com.ssr.newskuku._global.entity.BaseEntity;
-import com.ssr.newskuku.domain.news.News;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +12,10 @@ import org.apache.ibatis.type.Alias;
 @AllArgsConstructor
 @Builder
 @Alias("BookMark")
-public class BookMark extends BaseEntity {
+public class UserBookMark extends BaseEntity {
 
     private Long bookmarkId;
     private Long userInfoId;
-    private News news;
-    boolean status;
+    private Long newsId;
 
 }
