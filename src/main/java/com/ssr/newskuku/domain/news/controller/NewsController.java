@@ -17,13 +17,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class NewsController {
     private final NewsService newsService;
 
+
+    // 모든 카테고리 최신기사 크롤링 테스트
+    @GetMapping("/admin/crawl-all")
+    public String crawlAllCategories() {
+        newsService.crawlAllCategoriesLatestNews();
+        return "모든 카테고리 크롤링 시작!";
+    }
+
     /**
      * 임시 크롤링 API
      * @return
      */
     @GetMapping("/admin/crawl")
     @ResponseBody
-    public String crawl() {
+    public String crawl(String url) {
         newsService.crawlLatestNews();
         return "크롤링 완료";
     }
