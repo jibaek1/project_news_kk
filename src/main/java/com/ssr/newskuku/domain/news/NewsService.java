@@ -7,29 +7,28 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+
+
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 @Service
 @RequiredArgsConstructor
 public class NewsService {
 
     private final NewsMapper newsMapper;
-    private final RestTemplate restTemplate;
-    private final String OpenAiModel;
-    private final String OpenAiUrl;
+    private final JobLauncher jobLauncher;
+    private final Job summarizeNewsJob;
 
 
     private boolean isTodayArticle(String textTime) {
@@ -190,6 +189,7 @@ public class NewsService {
                             .thumbnail(thumb)
                             .isWrite(true)
                             .publishedAt(publishedAt)
+                            .summary(null)  // AI 요약은 Batch에서!
                             .build();
 
                     System.out.println("news : " + news);
@@ -201,86 +201,26 @@ public class NewsService {
             }
         }
         System.out.println("크롤링 완료!");
-        System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
-        generateSummaries();
+        System.out.println("\n 자동 요약 시작\n");
+
+        generateSummariesWithBatch();
     }
 
-    // 요약되지 않은 뉴스에 ai 추가
-    public void generateSummaries() {
-        List<News> newsWithoutSummary = newsMapper.findNewsWithoutSummary();
-
-        System.out.println("AI 요약 시작! 총 " + newsWithoutSummary.size() + "개");
-
-        // 스레드 풀 생성 (최대 10개 동시 실행)
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-
-        // 완료 개수 추적 (멀티스레드 안전)
-        AtomicInteger successCount = new AtomicInteger(0);
-        int totalCount = newsWithoutSummary.size();
-
-        // 비동기 작업 리스트
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-        // 각 뉴스마다 비동기 작업 생성
-        for (News news : newsWithoutSummary) {
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                try {
-                    System.out.println("요약 중: " + news.getTitle());
-
-                    String summary = summaryWithOpenAi(news.getContent());
-
-                    if (summary != null) {
-                        summarizeAndSaveOne(news.getNewsId(), summary);
-                        int completed = successCount.incrementAndGet();
-                        System.out.println("요약 완료 (" + completed + "/" + totalCount + ")");
-                    }
-
-                } catch (Exception e) {
-                    System.err.println("AI 요약 실패: " + e.getMessage());
-                }
-            }, executor);
-
-            futures.add(future);
-        }
-
-        // 모든 작업 완료 대기
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-
-        // 스레드 풀 종료
-        executor.shutdown();
-
-        System.out.println(" AI 요약 완료! 총 " + successCount.get() + "개");
-    }
-
-    // 개별 저장 (트랜잭션 분리)
-    @Transactional
-    public void summarizeAndSaveOne(Long newsId, String summary) {
-        newsMapper.updateNewsSummary(newsId, summary);
-    }
-
-
-    // Open Ai 호출
-    private String summaryWithOpenAi(String content) {
-        String prompt = "다음 뉴스를 3줄 이하로 요약해줘:\n\n" + content;
-
-        Map<String, Object> request = Map.of(
-                "model", OpenAiModel,
-                "messages", List.of(
-                        Map.of("role", "user", "content", prompt)
-                )
-        );
-
+    private void generateSummariesWithBatch() {
         try {
-            Map response = restTemplate.postForObject(OpenAiUrl, request, Map.class);
-            List choices = (List) response.get("choices");
-            Map choice = (Map) choices.get(0);
-            Map message = (Map) choice.get("message");
+            System.out.println("AI 요약 시작!");
 
-            return message.get("content").toString();
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("timestamp", System.currentTimeMillis())
+                    .toJobParameters();
+
+            jobLauncher.run(summarizeNewsJob, jobParameters);
+
+            System.out.println("AI 요약 완료!");
 
         } catch (Exception e) {
-            System.out.println("요약 실패: " + e.getMessage());
-            return null;
+            System.err.println("Batch 실행 실패: " + e.getMessage());
+            throw new RuntimeException("AI 요약 중 오류 발생", e);
         }
     }
 

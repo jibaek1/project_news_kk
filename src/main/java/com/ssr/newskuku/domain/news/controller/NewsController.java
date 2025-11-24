@@ -6,6 +6,8 @@ import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import com.ssr.newskuku.domain.news.mapper.NewsMapper;
 import com.ssr.newskuku.domain.openai.OpenAiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/news")
 public class NewsController {
     private final NewsService newsService;
+    private final JobLauncher jobLauncher;
+    private final Job summarizeNewsJob;
 
 
     // 모든 카테고리 최신기사 크롤링 테스트
@@ -33,7 +37,7 @@ public class NewsController {
     @ResponseBody
     public String crawl(String url) {
         newsService.crawlLatestNews();
-        return "크롤링 완료";
+        return "크롤링 및 요약 완료";
     }
 
     // 상세보기
