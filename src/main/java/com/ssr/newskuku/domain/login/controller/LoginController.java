@@ -1,4 +1,4 @@
-package com.ssr.newskuku.domain.login;
+package com.ssr.newskuku.domain.login.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
