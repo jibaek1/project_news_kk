@@ -57,7 +57,7 @@ public class NewsService {
                 "https://www.yna.co.kr/industry/all",
                 "https://www.yna.co.kr/society/all",
                 "https://www.yna.co.kr/local/all",
-                "https://www.yna.co.kr/world/all",
+                "https://www.yna.co.kr/international/all",
                 "https://www.yna.co.kr/culture/all",
                 "https://www.yna.co.kr/health/all",
                 "https://www.yna.co.kr/entertainment/all",
@@ -66,21 +66,46 @@ public class NewsService {
 
         int maxPage = 5;
 
-        for (String baseUrl : categoryUrls) {
-            crawlCategory(baseUrl, maxPage);
+        System.out.println("========================================");
+        System.out.println("전체 카테고리 크롤링 시작!");
+        System.out.println("총 " + categoryUrls.size() + "개 카테고리");
+        System.out.println("========================================");
+
+        int totalSaved = 0;
+
+        // 1단계: 모든 카테고리 크롤링 (요약 없이 저장만)
+        for (int i = 0; i < categoryUrls.size(); i++) {
+            String categoryUrl = categoryUrls.get(i);
+            String categoryName = categoryUrl.split("/")[3]; // URL에서 카테고리명 추출
+
+            System.out.println("\n[" + (i + 1) + "/" + categoryUrls.size() + "] " + categoryName + " 크롤링 중...");
+
+            int saved = crawlCategory(categoryUrl, maxPage);
+            totalSaved += saved;
+
+            System.out.println("→ " + categoryName + " 완료: " + saved + "개 저장");
         }
+
+        System.out.println("크롤링 완료! 총 " + totalSaved + "개 기사 저장");
+
+        System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
+        generateSummariesWithBatch();
     }
 
-    private void crawlCategory(String categoryUrl, int maxPage) {
+    // crawlCategory 메서드 수정: 저장한 개수 반환
+    private int crawlCategory(String categoryUrl, int maxPage) {
+        int savedCount = 0;
 
         for (int page = 1; page <= maxPage; page++) {
 
             String url = categoryUrl + "/" + page;
 
-
             try {
 
-                Document doc = Jsoup.connect(url).get();
+                Document doc = Jsoup.connect(url)
+                        .userAgent("Mozilla/5.0")
+                        .timeout(10000)
+                        .get();
 
                 Elements items = doc.select("div.news-con");
 
@@ -88,35 +113,37 @@ public class NewsService {
 
                     // 제목
                     String title = item.select("span.title01").text();
+                    if (title.isBlank()) continue;
+
                     // 링크
                     String link = item.select("a.tit-news").attr("href");
+                    if (link.isBlank()) continue;
+
                     // 시간
                     String publishedAt = item.select("span.txt-time").text();
 
+                    // 중복 체크
                     if (newsMapper.existsByUrl(link) > 0) continue;
 
+                    // 오늘 기사만
+                    if (!isTodayArticle(publishedAt)) continue;
+
+                    // 시간이 없는 기사 → 광고/특수기사 → 스킵
+                    if (publishedAt.isBlank()) continue;
+
                     // 상세 페이지
-                    Document detail = Jsoup.connect(link).get();
+                    Document detail = Jsoup.connect(link)
+                            .userAgent("Mozilla/5.0")
+                            .timeout(10000)
+                            .get();
+
                     // 내용
                     String content = detail.select(".story-news.article p").text();
                     // 썸네일
                     String thumb = detail.select(".img-con01 img").attr("src");
                     // 카테고리
-                    String category = detail.select(".nav-path01 a[data-stat-code=bread_crumb]")
-                            .first()
-                            .text();
-
-                    // 오늘 기사만
-                    if (!isTodayArticle(publishedAt)) {
-                        System.out.println("오늘 기사 아님 → 스킵: " + publishedAt);
-                        continue;
-                    }
-
-                    // 시간이 없는 기사 → 광고/특수기사 → 스킵
-                    if (publishedAt.isBlank()) {
-                        System.out.println("시간 없는 기사 → 제외");
-                        continue;
-                    }
+                    Element categoryElement = detail.select(".nav-path01 a[data-stat-code=bread_crumb]").first();
+                    String category = categoryElement != null ? categoryElement.text() : "기타";
 
                     News news = News.builder()
                             .title(title)
@@ -126,14 +153,20 @@ public class NewsService {
                             .thumbnail(thumb)
                             .isWrite(true)
                             .publishedAt(publishedAt)
+                            .summary(null)  // AI 요약은 나중에!
                             .build();
 
                     newsMapper.save(news);
+                    savedCount++;
+
+                    System.out.println("[" + category + "] " + title);
                 }
             } catch (Exception e) {
-                System.out.println("크롤링 오류: " + e.getMessage());
+                System.err.println("페이지 " + page + " 오류: " + e.getMessage());
             }
         }
+
+        return savedCount;
     }
 
 
@@ -196,7 +229,7 @@ public class NewsService {
                             .thumbnail(thumb)
                             .isWrite(true)
                             .publishedAt(publishedAt)
-                            .summary(null)  // AI 요약은 Batch에서!
+                            .summary(null)
                             .build();
 
                     System.out.println("news : " + news);
