@@ -27,7 +27,7 @@ public class NoticeController {
     @GetMapping
     public String noticeMain(@RequestParam(defaultValue = "0") int page,
                              Model model) {
-        List<NoticeResponse.FindAll> noticeList = noticeService.getNoticeList();
+        List<NoticeResponse> noticeList = noticeService.getNoticeList();
 
         /*
         int totalPages = noticePage.getTotalPages();

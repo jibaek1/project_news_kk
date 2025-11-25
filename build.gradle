@@ -57,6 +57,9 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
+
+	// 솔라피 sdk (sms)
+	implementation 'com.solapi:sdk:1.0.3'
 }
 
 tasks.named('test') {
