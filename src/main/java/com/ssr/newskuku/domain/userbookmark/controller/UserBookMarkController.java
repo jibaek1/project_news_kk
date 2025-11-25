@@ -1,10 +1,14 @@
 package com.ssr.newskuku.domain.userbookmark.controller;
 
+import com.ssr.newskuku._global.common.Define;
+import com.ssr.newskuku._global.common.PageLink;
+import com.ssr.newskuku._global.common.PageUtils;
 import com.ssr.newskuku.domain.userbookmark.UserBookMarkService;
 import com.ssr.newskuku.domain.userbookmark.dto.UserBookMarkResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +24,33 @@ public class UserBookMarkController {
     @PostMapping("/toggle")
     @ResponseBody
     public boolean toggle(@RequestParam Long newsId,
-                          @RequestParam Long userInfoId, HttpSession httpSession) {
+                          @RequestParam Long userInfoId, HttpSession session) {
+
+        Long sessionUserId = (Long) session.getAttribute(Define.SESSION_USER);
+        if (sessionUserId == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
 
         return userBookMarkService.toggle(userInfoId, newsId);
     }
 
     @GetMapping("/findAllBookMark")
-    @ResponseBody
-    public List<UserBookMarkResponse.FindAll> findAllList(@RequestParam Long userInfoId) {
+    public String getFindAllList(@RequestParam Long userInfoId,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 Model model) {
 
-        return userBookMarkService.findAllBookMark(userInfoId);
-      }
+        List<UserBookMarkResponse.FindAll> list =
+                userBookMarkService.findAllBookMark(userInfoId, page, size);
+
+        int total = userBookMarkService.count(userInfoId);
+        List<PageLink> pageLinks = PageUtils.createPageLinks(page, size, total);
+
+        model.addAttribute("list", list);
+        model.addAttribute("pageLinks", pageLinks);
+        model.addAttribute("currentPage", page);
+
+        return "bookmark/bookmarkList"; // JSP 경로
     }
+}
 
