@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +16,8 @@ public class SseService {
     public SseEmitter connect(Long userInfoId) {
         String emitterId = SseKey.generateId(userInfoId);
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+
+        repository.save(emitterId, emitter);
 
         try {
             emitter.send(SseEmitter.event()
@@ -34,7 +35,7 @@ public class SseService {
         return emitter;
     }
 
-    public void send(Long userInfoId, Objects data) {
+    public void send(Long userInfoId, Object data) {
         String emitterId = SseKey.generateId(userInfoId);
         SseEmitter emitter = repository.get(emitterId);
 
@@ -48,7 +49,4 @@ public class SseService {
             repository.remove(emitterId);
         }
     }
-
-
-
 }

@@ -23,6 +23,10 @@ public interface UserBookMarkMapper {
                             @Param("newsId") Long newsId);
 
         // 전체 조회
-        List<UserBookMarkResponse.FindAll> findAll(@Param("userInfoId") Long userInfoId);
+        List<UserBookMarkResponse.FindAll> findAll(@Param("userInfoId") Long userInfoId,
+                                                        @Param("size") int size,
+                                                        @Param("offset") int offset);
+
+    int countByUser(@Param("userInfoId") Long userInfoId);
 
 }

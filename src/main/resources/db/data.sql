@@ -321,3 +321,17 @@ VALUES
     ('홈', 'HOME', NULL, 1, '/home', 1, '메인 페이지', CURRENT_TIMESTAMP),
     ('내 정보', 'PROFILE', NULL, 2, '/profile', 1, '사용자 프로필 페이지', CURRENT_TIMESTAMP);
 
+--DROP TABLE IF EXISTS notification;
+--CREATE TABLE notification (
+--    notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    user_info_id BIGINT NOT NULL,
+--    message VARCHAR(255) NOT NULL,
+--    is_read TINYINT DEFAULT 0,
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+--     PRIMARY KEY (id),
+--     FOREIGN KEY (user_info_id) REFERENCES user_info(user_info_id)
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;;
+--
+--INSERT INTO notification (user_info_id, message, is_read, created_at)
+--VALUES (5, '새로운 댓글이 달렸습니다.', 'COMMENT', 0, CURRENT_TIMESTAMP),
+--       (5, '내 게시물이 좋아요 10개를 넘었습니다!', 0, CURRENT_TIMESTAMP);
