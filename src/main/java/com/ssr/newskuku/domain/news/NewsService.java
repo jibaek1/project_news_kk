@@ -42,7 +42,7 @@ public class NewsService {
     // 뉴스 카테고리별 처리 크롤링 처리
     public void crawlAllCategoriesLatestNews() {
 
-        int maxPage = 5;
+        int maxPage = 20;
         int totalSaved = 0;
 
         for (String categoryUrl : categoryUrls) {
@@ -50,14 +50,18 @@ public class NewsService {
         }
 
         System.out.println("총 " + totalSaved + "개 기사 저장");
-        System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
+        // System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
 
-        generateSummariesWithBatch();
+        // generateSummariesWithBatch();
     }
 
     // crawlCategory 메서드 수정: 저장한 개수 반환
     private int crawlCategory(String categoryUrl, int maxPage) {
         int savedCount = 0;
+
+        boolean yesterdayStarted = false;
+        int nonYesterdayCount = 0;
+
         for (int page = 1; page <= maxPage; page++) {
 
             try {
@@ -71,33 +75,51 @@ public class NewsService {
                     String link = parser.getLink(item);
                     if (link.isBlank()) continue;
 
-                    String publishedAt = parser.getPublishedAt(item);
-                    if (publishedAt.isBlank()) continue;
-
-                    // 오늘 기사만
-                    if (!parser.isTodayArticle(publishedAt)) continue;
-
                     // 중복 체크
                     if (newsMapper.existsByUrl(link) > 0) continue;
 
                     // 상세페이지
                     Document detail = crawler.getDocument(link);
 
-                    // News 생성
-                    News news = News.builder()
-                            .title(title)
-                            .url(link)
-                            .content(parser.getContent(detail))
-                            .thumbnail(parser.getThumbnail(detail))
-                            .category(parser.getCategory(detail))
-                            .publishedAt(publishedAt)
-                            .isWrite(true)
-                            .summary(null)
-                            .build();
+                    // 상세 페이지 data-publishdate 가져오기
+                    String realPublishedAt = parser.getRealPublishedAt(detail);
+                    if (realPublishedAt.isBlank()) continue;
 
-                    newsMapper.save(news);
-                    savedCount++;
+                    boolean isYesterday = parser.isYesterdayArticle(realPublishedAt);
 
+                    // 어제 기사구간 시작했는데 어제가 아닌 기사가 나오면 -> 카운트 증가
+                    if (!isYesterday && yesterdayStarted) {
+
+                        nonYesterdayCount++;
+
+                        // 20번 연속 어제가 아니면, 어제 기사 구간이 끝났다고 판단 -> 종료
+                        if (nonYesterdayCount >= 20) {
+                            return savedCount;
+                        }
+
+                        continue;
+                    }
+
+                    // 어제 기사만 저장
+                    if (isYesterday) {
+
+                        yesterdayStarted = true;
+                        nonYesterdayCount = 0;
+                        // News 생성
+                        News news = News.builder()
+                                .title(title)
+                                .url(link)
+                                .content(parser.getContent(detail))
+                                .thumbnail(parser.getThumbnail(detail))
+                                .category(parser.getCategory(detail))
+                                .publishedAt(realPublishedAt)
+                                .isWrite(true)
+                                .summary(null)
+                                .build();
+
+                        newsMapper.save(news);
+                        savedCount++;
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("카테고리 페이지 에러: " + e.getMessage());
