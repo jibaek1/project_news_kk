@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/notice")
+@RequestMapping("/notice")
 public class NoticeController {
 
     private final NoticeService noticeService;
