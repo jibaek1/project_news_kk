@@ -1,4 +1,4 @@
-package com.ssr.newskuku._global.config;
+package com.ssr.newskuku._global.batch;
 
 import com.ssr.newskuku.domain.news.News;
 import com.ssr.newskuku.domain.news.mapper.NewsMapper;
