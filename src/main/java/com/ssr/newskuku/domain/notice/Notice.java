@@ -9,7 +9,6 @@ import org.apache.ibatis.type.Alias;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Alias("Notice")
 public class Notice extends BaseEntity {
 
     private Long noticeId;
