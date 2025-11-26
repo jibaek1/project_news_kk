@@ -19,6 +19,12 @@ public class NewsController {
     private final JobLauncher jobLauncher;
     private final Job summarizeNewsJob;
 
+    @GetMapping
+    public String newsList() {
+        return "news/list";
+    }
+
+
     // 모든 카테고리 최신기사 크롤링 테스트
     @GetMapping("/admin/crawl-all")
     public String crawlAllCategories() {

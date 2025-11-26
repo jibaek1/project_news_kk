@@ -20,27 +20,30 @@ public class UserBookMarkService {
 
     // 북마크 토글 기능
     @Transactional
-    public boolean toggle(Long userInfoId, Long newsId) {
-        UserBookMark exist = userBookMarkMapper.findByUserAndNews(userInfoId, newsId);
+    public boolean toggle(Long sessionUserId, Long newsId) {
+        UserBookMark exist = userBookMarkMapper.findByUserAndNews(sessionUserId, newsId);
 
         if (exist == null) {
-            userBookMarkMapper.insertBookMark(userInfoId, newsId);
-            log.info("북마크 추가 - 회원번호: {} 뉴스번호: {}", userInfoId, newsId);
+            userBookMarkMapper.insertBookMark(sessionUserId, newsId);
+            log.info("북마크 추가 - 회원번호: {} 뉴스번호: {}", sessionUserId, newsId);
 
             return true;
 
         } else {
-            userBookMarkMapper.deleteBookMark(userInfoId, newsId);
-            log.info("북마크 삭제 - 회원번호: {} 뉴스번호: {}", userInfoId, newsId);
+            userBookMarkMapper.deleteBookMark(sessionUserId, newsId);
+            log.info("북마크 삭제 - 회원번호: {} 뉴스번호: {}", sessionUserId, newsId);
         }
         return false;
     }
 
     // 북마크 전체 조회 기능
-    public List<UserBookMarkResponse.FindAll> findAllBookMark(Long userInfoId) {
-        log.info("회원번호: {}", userInfoId);
-        return userBookMarkMapper.findAll(userInfoId);
+    public List<UserBookMarkResponse.FindAll> findAllBookMark(Long userInfoId, int page, int size) {
+        int offset = page * size;
+        return userBookMarkMapper.findAll(userInfoId, size, offset);
     }
 
+    public int count(Long userInfoId) {
+        return userBookMarkMapper.countByUser(userInfoId);
+    }
 
 }

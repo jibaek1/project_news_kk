@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssr.newskuku.domain.notification.mapper.NotificationMapper">
+
+    <insert id="insert">
+        INSERT INTO notification(user_info_id, message, type, is_read)
+        VALUES (#{userInfoId}, #{message}, #{type}, #{isRead})
+    </insert>
+
+    <select id="findByUser" resultType="com.ssr.newskuku.domain.notification.Notification">
+        SELECT *
+        FROM notification
+        WHERE user_info_id = #{userId}
+        ORDER BY notification_id DESC
+    </select>
+
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*)
+        FROM notification
+        WHERE user_info_id = #{userId}
+        AND is_read = 0
+    </select>
+
+    <update id="markAsRead">
+        UPDATE notification
+        SET is_read = 1
+        WHERE notification_id = #{id}
+        AND user_info_id = #{userId}
+    </update>
+
+
+</mapper>
