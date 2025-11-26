@@ -56,8 +56,16 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// OAuth2 소셜 로그인 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// JSON 처리 (OAuth2 응답 파싱용)
+	implementation 'com.google.code.gson:gson:2.10.1'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// 솔라피 sdk (sms)
 	implementation 'com.solapi:sdk:1.0.3'
