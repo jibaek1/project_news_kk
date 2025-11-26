@@ -23,6 +23,6 @@ public class UserInfo extends BaseEntity {
     private LocalDate birthDate;
     private Gender gender;
     private String nickname;
-    private String mobile;
+    private String phoneNumber;
     private List<UserCategory> categories;
 }

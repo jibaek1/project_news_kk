@@ -40,12 +40,6 @@ public interface UserInfoMapper {
                         @Param("nickname") String nickname);
 
     /**
-     * 연령대 업데이트
-     */
-    void updateAge(@Param("userId") Long userId,
-                   @Param("age") Integer age);
-
-    /**
      * 성별 업데이트
      */
     void updateGender(@Param("userId") Long userId,
@@ -58,10 +52,9 @@ public interface UserInfoMapper {
                          @Param("birthDate") LocalDate birthDate);
 
     /**
-     * 추가 정보 일괄 업데이트 (연령, 성별 등)
+     * 추가 정보 일괄 업데이트 (생년월일, 성별)
      */
     void updateAdditionalInfo(@Param("userId") Long userId,
-                              @Param("age") Integer age,
                               @Param("gender") Gender gender,
                               @Param("birthDate") LocalDate birthDate);
 
@@ -87,6 +80,7 @@ public interface UserInfoMapper {
 
     /**
      * 특정 연령대의 사용자 목록 조회
+     * birthDate를 기준으로 현재 나이를 계산하여 조회
      */
     List<UserInfo> findByAgeRange(@Param("minAge") Integer minAge,
                                   @Param("maxAge") Integer maxAge);
@@ -98,12 +92,13 @@ public interface UserInfoMapper {
 
     /**
      * 프로필 완성도 체크 (필수 정보 입력 여부)
-     * 연령, 성별 정보가 모두 있으면 true
+     * 생년월일, 성별 정보가 모두 있으면 true
      */
     boolean isProfileComplete(@Param("userId") Long userId);
 
     /**
      * 연령대별 사용자 수 통계
+     * birthDate를 기준으로 현재 나이를 계산하여 통계
      */
     List<Map<String, Object>> countByAgeGroup();
 

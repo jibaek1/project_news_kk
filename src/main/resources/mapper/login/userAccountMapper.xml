@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssr.newskuku.domain.login.mapper.UserAccountMapper">
+
+    <!-- Result Map -->
+    <resultMap id="userAccountResultMap" type="user_account">
+        <id property="userId" column="user_id"/>
+        <result property="email" column="email"/>
+        <result property="provider" column="provider"/>
+        <result property="socialId" column="social_id"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="modifiedAt" column="modified_at"/>
+    </resultMap>
+
+    <!-- 소셜 로그인 제공자와 소셜 ID로 사용자 조회 -->
+    <select id="findByProviderAndSocialId" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        WHERE provider = #{provider}
+        AND social_id = #{socialId}
+    </select>
+
+    <!-- 사용자 ID로 조회 -->
+    <select id="findByUserId" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 이메일로 사용자 조회 -->
+    <select id="findByEmail" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        WHERE email = #{email}
+    </select>
+
+    <!-- 새 사용자 등록 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id">
+        INSERT INTO user_account (email, provider, social_id, status, created_at, modified_at)
+        VALUES (#{email}, #{provider}, #{socialId}, #{status}, NOW(), NOW())
+    </insert>
+
+    <!-- 사용자 정보 업데이트 -->
+    <update id="update">
+        UPDATE user_account
+        SET email = #{email},
+        provider = #{provider},
+        social_id = #{socialId},
+        status = #{status},
+        modified_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 사용자 상태 업데이트 -->
+    <update id="updateStatus">
+        UPDATE user_account
+        SET status = #{status},
+        modified_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 사용자 삭제 (물리적 삭제) -->
+    <delete id="delete">
+        DELETE FROM user_account
+        WHERE user_id = #{userId}
+    </delete>
+
+    <!-- 모든 사용자 조회 -->
+    <select id="findAll" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 특정 상태의 사용자 목록 조회 -->
+    <select id="findByStatus" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 특정 제공자의 사용자 목록 조회 -->
+    <select id="findByProvider" resultMap="userAccountResultMap">
+        SELECT user_id,
+        email,
+        provider,
+        social_id,
+        status,
+        created_at,
+        modified_at
+        FROM user_account
+        WHERE provider = #{provider}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 사용자 총 수 조회 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM user_account
+    </select>
+
+    <!-- 제공자별 사용자 수 조회 -->
+    <select id="countByProvider" resultType="int">
+        SELECT COUNT(*)
+        FROM user_account
+        WHERE provider = #{provider}
+    </select>
+
+</mapper>

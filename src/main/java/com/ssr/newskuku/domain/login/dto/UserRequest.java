@@ -32,8 +32,8 @@ public class UserRequest {
         private LocalDate birthDate;
         private String gender;
         private String nickname;
-        private String mobile;
-        private List<Integer> categoryIds;
+        private String phoneNumber;
+        private List<Long> categoryIds;
     }
 
     @Getter
@@ -42,14 +42,14 @@ public class UserRequest {
     public static class UpdateProfile {
         private String profileImage;
         private String nickname;
-        private String mobile;
+        private String phoneNumber;
     }
 
     @Getter
     @Setter
     @ToString
     public static class UpdateCategories {
-        private List<Integer> categoryIds;
+        private List<Long> categoryIds;
     }
 
     @Getter
@@ -57,5 +57,20 @@ public class UserRequest {
     @ToString
     public static class UpdateStatus {
         private Status status;
+    }
+
+    /**
+     * 추가 정보 입력용 DTO
+     * OAuth2 로그인 후 추가 정보 수집 시 사용
+     */
+    @Getter
+    @Setter
+    @ToString
+    public static class AdditionalInfo {
+        private LocalDate birthDate;
+        private String gender;
+        private String nickname;
+        private String phoneNumber;
+        private List<Long> categoryIds;
     }
 }

@@ -55,6 +55,7 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml # Mapper.xml 구성 파일의 위치.
+  type-aliases-package: com.ssr.newskuku.domain # Entity 스캔 경로 (@Alias 자동 인식)
   configuration:
     default-statement-timeout: 30 # 디폴트 타임아웃 설정.
     map-underscore-to-camel-case: true # 데이터베이스 칼럼 이름을 언더스코어(_) → 카멜케이스로 자동 변환.

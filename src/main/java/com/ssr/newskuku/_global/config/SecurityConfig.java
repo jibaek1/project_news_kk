@@ -27,9 +27,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login/**", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/WEB-INF/views/**").permitAll()
-                        .anyRequest().authenticated()
+                        // 모든 경로 허용 (임시)
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")

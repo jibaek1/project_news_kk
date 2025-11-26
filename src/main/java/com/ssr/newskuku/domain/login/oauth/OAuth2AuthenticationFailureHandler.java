@@ -18,8 +18,13 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         log.error("OAuth2 인증 실패: {}", exception.getMessage());
+        log.info("리다이렉트 URL: /login?error=true&message={}", exception.getMessage());
 
-        // 로그인 페이지로 리다이렉트하며 에러 메시지 전달
+        if (response.isCommitted()) {
+            log.warn("Response already committed. Cannot redirect.");
+            return;
+        }
+
         getRedirectStrategy().sendRedirect(request, response,
                 "/login?error=true&message=" + exception.getMessage());
     }

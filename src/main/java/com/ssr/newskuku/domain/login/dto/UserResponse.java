@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -48,18 +49,18 @@ public class UserResponse {
         private final String gender;
         private final String nickname;
         private final Integer age;
-        private final String mobile;
-        private List<Integer> categoryIds;
+        private final String phoneNumber;
+        private List<Long> categoryIds;
         private final String createdAt;
 
-        public ProfileInfo(UserInfo info, List<Integer> categoryIds) {
+        public ProfileInfo(UserInfo info, List<Long> categoryIds) {
             this.userId = info.getUserId();
             this.profileImage = info.getProfileImage();
             this.birthDate = info.getBirthDate();
             this.gender = info.getGender() != null ? info.getGender().name() : null;
             this.nickname = info.getNickname();
             this.age = calculateAge(info.getBirthDate());
-            this.mobile = info.getMobile();
+            this.phoneNumber = info.getPhoneNumber();
             this.categoryIds = categoryIds;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             this.createdAt = info.getCreatedAt() != null
@@ -69,7 +70,7 @@ public class UserResponse {
 
         private Integer calculateAge(LocalDate birthDate) {
             if (birthDate == null) return null;
-            return LocalDate.now().getYear() - birthDate.getYear();
+            return Period.between(birthDate, LocalDate.now()).getYears();
         }
     }
 
@@ -92,11 +93,12 @@ public class UserResponse {
         private String gender;
         private String nickname;
         private Integer age;
-        private List<Integer> categoryIds;
+        private String phoneNumber;
+        private List<Long> categoryIds;
         private String createdAt;
         private String modifiedAt;
 
-        public FullInfo(UserAccount account, UserInfo info, List<Integer> categoryIds) {
+        public FullInfo(UserAccount account, UserInfo info, List<Long> categoryIds) {
             // Account
             this.userId = account.getUserId();
             this.email = account.getEmail();
@@ -109,6 +111,7 @@ public class UserResponse {
                 this.birthDate = info.getBirthDate();
                 this.gender = info.getGender() != null ? info.getGender().name() : null;
                 this.nickname = info.getNickname();
+                this.phoneNumber = info.getPhoneNumber();
                 this.age = calculateAge(info.getBirthDate());
             }
 
@@ -127,7 +130,7 @@ public class UserResponse {
 
         private Integer calculateAge(LocalDate birthDate) {
             if (birthDate == null) return null;
-            return LocalDate.now().getYear() - birthDate.getYear();
+            return Period.between(birthDate, LocalDate.now()).getYears();
         }
     }
 

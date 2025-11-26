@@ -21,9 +21,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        log.info("OAuth2 인증 성공");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        // 추가 정보가 필요한 경우
+        if (response.isCommitted()) {
+            log.warn("Response already committed. Cannot redirect.");
+            return;
+        }
+
         if (oAuth2User.getAttributes().containsKey("needsAdditionalInfo") &&
                 (boolean) oAuth2User.getAttributes().get("needsAdditionalInfo")) {
 
@@ -32,9 +37,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("userId", userId)
                     .build().toUriString();
 
+            log.info("추가 정보 입력 페이지로 리다이렉트: {}", targetUrl);
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else {
-            // 메인 페이지로 리다이렉트
+            log.info("메인 페이지로 리다이렉트: /");
             getRedirectStrategy().sendRedirect(request, response, "/");
         }
     }
