@@ -18,17 +18,22 @@ public class NewsParser {
         return item.select("a.tit-news").attr("href");
     }
 
-    public String getPublishedAt(Element item) {
-        return item.select("span.txt-time").text();
+    public String getRealPublishedAt(Document detail) {
+        String date = detail.select(".update-time").attr("data-published-time");
+        return date != null ? date.trim() : "";
     }
 
-    public boolean isTodayArticle(String textTime) {
-        if (textTime == null || textTime.isBlank()) return false;
+    public boolean isYesterdayArticle(String dateTime) {
+        if (dateTime == null || dateTime.isBlank()) return false;
 
         try {
-            String datePart = textTime.split(" ")[0];
-            String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd"));
-            return datePart.equals(today);
+            String datePart = dateTime.split(" ")[0];
+
+            String yesterday = LocalDate.now()
+                    .minusDays(1)
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            return datePart.equals(yesterday);
         } catch (Exception e) {
             return false;
         }

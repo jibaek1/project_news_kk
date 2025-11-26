@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssr.newskuku.domain.community.mapper.CommunityMapper">
+    <select id="selectAllCommunities" resultType="com.ssr.newskuku.domain.community.NewsCommunity">
+        SELECT p.community_id, p.user_id, p.title, p.content, p.tag, p.img_url, p.view_count, p.created_at, p.updated_at, u.nickname
+        FROM news_community p
+        LEFT JOIN user_info u ON p.user_id = u.user_id
+        ORDER BY p.created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+
+    <select id="selectById" resultType="com.ssr.newskuku.domain.community.NewsCommunity">
+        SELECT p.community_id, p.user_id, p.title, p.content, p.tag, p.img_url, p.view_count, p.created_at, p.updated_at, u.nickname
+        FROM news_community p
+        LEFT JOIN user_info u ON p.user_id = u.user_id
+        WHERE p.community_id = #{communityId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
+        INSERT INTO news_community(user_id, title, content, tag, img_url, view_count, created_at, updated_at)
+        VALUES (#{userId}, #{title}, #{content}, #{tag}, #{imgUrl}, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE news_community SET title = #{title},
+        content = #{content}, tag = #{tag},
+        update_at = CURRENT_TIME
+        WHERE community_id = #{communityId}
+    </update>
+</mapper>

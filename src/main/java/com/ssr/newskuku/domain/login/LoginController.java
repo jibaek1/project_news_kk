@@ -14,4 +14,14 @@ public class LoginController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("login")
+    public String loginForm() {
+        return "/auth/login";
+    }
+
+    @GetMapping("regist")
+    public String registForm() {
+        return "/auth/regist";
+    }
 }
