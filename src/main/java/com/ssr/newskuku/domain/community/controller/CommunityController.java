@@ -5,10 +5,7 @@ import com.ssr.newskuku.domain.community.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,28 +27,24 @@ public class CommunityController {
     private CommunityService communityService;
 
     // 1. 전체 조회
-    @GetMapping("/list")
+    @GetMapping("")
     public String list(
             @RequestParam(value = "page", defaultValue = "1") int page,
             Model model
     ){
         List<NewsCommunity> communities = communityService.getAllCommunities(page, 10);
-
         model.addAttribute("communities", communities);
-
         model.addAttribute("page", page);
-
         return "community/list";
     }
 
     // 2. 상세보기
-    @GetMapping("/detail")
+    @GetMapping("/id")
     public String detail(
             @RequestParam("communityId") long communityId, Model model){
-
         NewsCommunity community = communityService.getDetail(communityId);
         model.addAttribute("community", community);
-        return "community/detail";
+        return "community/id";
     }
 
     // 3. 글 쓰기 폼 연결
@@ -66,10 +59,7 @@ public class CommunityController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("tag") String tag){
-        // 객체 생성
         NewsCommunity newsCommunity = new NewsCommunity();
-
-        // 객체 데이터 생성
         newsCommunity.setUserId(1L);
         newsCommunity.setTitle(title);
         newsCommunity.setContent(content);
@@ -77,11 +67,8 @@ public class CommunityController {
         newsCommunity.setImgUrl(null);
         newsCommunity.setViewCount(0);
 
-
-        // DB에 저장
         communityService.create(newsCommunity);
-
-        return "redirect:/community/list";
+        return "redirect:/community";
     }
 
     // 5. 게시글 수정 폼 보여주기
@@ -89,8 +76,29 @@ public class CommunityController {
     public String edit(@RequestParam("communityId") long communityId, Model model){
         NewsCommunity community = communityService.getDetail(communityId);
         model.addAttribute("community", community);
-        communityService.update(community);
-        return "redirect:/edit";
+        return "community/edit";
     }
 
+    // 6. 수정 데이터 저장
+    @PostMapping("/edit")
+    public String editPost(@RequestParam("communityId") long communityId,
+                           @RequestParam("title") String title,
+                           @RequestParam("content") String content,
+                           @RequestParam("tag") String tag){
+        NewsCommunity newsCommunity = new NewsCommunity();
+        newsCommunity.setCommunityId(communityId);
+        newsCommunity.setTitle(title);
+        newsCommunity.setContent(content);
+        newsCommunity.setTag(tag);
+
+        communityService.update(newsCommunity);
+        return "redirect:/community/id?communityId=" + communityId;
+    }
+
+    // 7. 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String deletePost(@PathVariable Long id){
+        communityService.delete(id);
+        return "redirect:/community";
+    }
 }

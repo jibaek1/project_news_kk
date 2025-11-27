@@ -23,9 +23,15 @@
     </insert>
 
     <update id="update">
-        UPDATE news_community SET title = #{title},
-        content = #{content}, tag = #{tag},
-        update_at = CURRENT_TIME
+        UPDATE news_community
+        SET title = #{title},
+        content = #{content},
+        tag = #{tag},
+        updated_at = CURRENT_TIMESTAMP
         WHERE community_id = #{communityId}
     </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM news_community WHERE community_id = #{communityId}
+    </delete>
 </mapper>

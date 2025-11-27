@@ -19,7 +19,7 @@
 <body>
     <div class="container">
         <div style="margin-bottom: 20px;">
-            <button class="btn btn-back" onclick="history.back()">← 뒤로가기</button>
+            <button class="btn btn-back" onclick="location.href='/community'">← 뒤로가기</button>
         </div>
 
         <span class="tag">${community.tag}</span>
@@ -39,8 +39,13 @@
         <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
 
         <div>
-            <button class="btn" onclick="alert('수정 기능은 준비 중입니다.')">수정</button>
-            <button class="btn btn-back" onclick="alert('삭제 기능은 준비 중입니다.')">삭제</button>
+            <button class="btn" onclick="location.href='/community/edit?communityId=${community.communityId}'">수정</button>
+
+            <form method="POST" action="/community/delete/${community.communityId}" style="display:inline;">
+                <button type="submit" class="btn btn-back" onclick="return confirm('정말 삭제하시겠습니까?');">
+                    삭제
+                </button>
+            </form>
         </div>
     </div>
 </body>

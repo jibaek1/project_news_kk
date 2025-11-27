@@ -43,7 +43,7 @@
         <c:choose>
             <c:when test="${not empty communities}">
                 <c:forEach var="post" items="${communities}">
-                    <div class="post" onclick="location.href='/community/detail?communityId=${post.communityId}'">
+                    <div class="post" onclick="location.href='/community/id?communityId=${post.communityId}'"
                         <span class="tag">${post.tag}</span>
                         <div class="post-title">${post.title}</div>
                         <div class="post-meta">
