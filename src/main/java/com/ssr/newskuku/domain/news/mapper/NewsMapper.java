@@ -24,4 +24,7 @@ public interface NewsMapper {
 
     // 요약 업데이트
     void updateNewsSummary(@Param("newsId") Long newsId, @Param("summary") String summary);
+
+    // 뉴스 전체보기
+    List<NewsResponse.FindAll> findAll();
 }
