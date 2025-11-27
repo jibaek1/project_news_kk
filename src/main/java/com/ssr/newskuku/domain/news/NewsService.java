@@ -146,6 +146,11 @@ public class NewsService {
         }
     }
 
+    // 전체불러오기
+    public List<NewsResponse.FindAll> findAll() {
+        return newsMapper.findAll();
+    }
+
     // 상세보기
     public NewsResponse.FindById getNewsId(Long id) {
         return newsMapper.findById(id);

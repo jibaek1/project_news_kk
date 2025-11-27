@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/news")
@@ -20,7 +22,9 @@ public class NewsController {
     private final Job summarizeNewsJob;
 
     @GetMapping
-    public String newsList() {
+    public String newsList(Model model) {
+        List<NewsResponse.FindAll> newsList = newsService.findAll();
+        model.addAttribute("news", newsList);
         return "news/list";
     }
 
@@ -39,4 +43,5 @@ public class NewsController {
         model.addAttribute("news", news);
         return "news/detail";  // JSP 페이지
     }
+
 }

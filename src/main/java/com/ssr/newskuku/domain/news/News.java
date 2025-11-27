@@ -23,6 +23,7 @@ public class News extends BaseEntity {
     private String thumbnail;
     private boolean isWrite;
     private String publishedAt;
+    private Integer viewCount;
 
     // 뉴스 요약
     private String summary;
