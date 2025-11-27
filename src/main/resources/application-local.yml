@@ -35,3 +35,7 @@ notification:
     # 이슈 상태가 DONE 으로 변경되었을 때 사용할 알림 타입 지정
     on-status-done: PUSH
 
+openai:
+  api-key: "test-api-key-for-development"
+  api-url: https://api.openai.com/v1/chat/completions
+  model: gpt-5-nano

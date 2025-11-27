@@ -32,4 +32,7 @@ public interface CommunityMapper {
     // 4. 게시글 수정
     void update(NewsCommunity newsCommunity);
 
+    // 5. 게시글 삭제
+    void delete(Long id);
+
 }
