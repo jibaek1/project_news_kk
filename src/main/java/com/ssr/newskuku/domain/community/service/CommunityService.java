@@ -45,5 +45,9 @@ public class CommunityService {
         communityMapper.update(newsCommunity);
     }
 
+    // 5. 게시글 삭제
+    public void  delete(Long communityId){
+        communityMapper.delete(communityId);
+        }
 
 }

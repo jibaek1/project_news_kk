@@ -53,14 +53,16 @@
                 <!-- 버튼 -->
                 <div class="d-flex gap-2">
                     <button class="btn btn-primary"
-                            onclick="alert('수정 기능은 준비 중입니다.')">
+                            onclick="location.href='/community/edit?communityId=${community.communityId}'">
                         수정
                     </button>
 
-                    <button class="btn btn-outline-danger"
-                            onclick="alert('삭제 기능은 준비 중입니다.')">
-                        삭제
-                    </button>
+                    <form method="POST" action="/community/delete/${community.communityId}" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-danger"
+                                onclick="return confirm('정말 삭제하시겠습니까?');">
+                            삭제
+                        </button>
+                    </form>
                 </div>
             </div>
 
