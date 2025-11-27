@@ -30,7 +30,7 @@ public class CommunityController {
     private CommunityService communityService;
 
     // 1. 전체 조회
-    @GetMapping("/list")
+    @GetMapping
     public String list(
             @RequestParam(value = "page", defaultValue = "1") int page,
             Model model

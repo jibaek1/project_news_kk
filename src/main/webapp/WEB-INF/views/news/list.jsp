@@ -1,6 +1,8 @@
 <%@ include file="/WEB-INF/layout/header.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <style>
     /* 라벨 + 조건 박스 전체 스타일 */
@@ -54,8 +56,6 @@
             <!-- ===================== 1. 카테고리 ===================== -->
             <div class="filter-row d-flex align-items-center flex-wrap">
                 <div class="filter-label">카테고리 |</div>
-
-                <!-- 이 부분은 DB에서 불러와서 반복문으로 변환될 예정 -->
                 <div class="filter-option active">전체</div>
                 <div class="filter-option">정치</div>
                 <div class="filter-option">오락</div>
@@ -64,11 +64,9 @@
                 <div class="filter-option">IT</div>
             </div>
 
-
             <!-- ===================== 2. 나이대별 관심사 ===================== -->
             <div class="filter-row d-flex align-items-center flex-wrap">
                 <div class="filter-label">나이대별 관심사 |</div>
-
                 <div class="filter-option active">전체</div>
                 <div class="filter-option">20대</div>
                 <div class="filter-option">30대</div>
@@ -84,41 +82,38 @@
                 </form>
             </div>
 
-
             <!-- ===================== 4. 기사 리스트 (B 스타일) ===================== -->
             <div class="article-list">
+                <c:choose>
+                    <c:when test="${not empty news}">
+                        <c:forEach var="news" items="${news}">
+                            <div class="article-item d-flex mb-4 border-bottom"
+                                 onclick="location.href='/news/detail/${news.newsId}'"
+                                 style="cursor: pointer;">
 
-                <!-- 1개 기사 -->
-                <div class="article-item d-flex mb-4 border-bottom">
+                                <!-- 썸네일 (DB 값 없으면 기본 이미지) -->
+                                <img src="${empty news.thumbnail ? 'https://dummyimage.com/150x100/ced4da/6c757d' : news.thumbnail}"
+                                     class="rounded me-3" alt="thumbnail" width="150" height="100">
 
-                    <!-- 썸네일 -->
-                    <img src="https://dummyimage.com/150x100/ced4da/6c757d"
-                         class="rounded me-3" alt="thumbnail" width="150" height="100">
+                                <!-- 텍스트 영역 -->
+                                <div>
+                                    <h5 class="fw-bold mb-2">${news.title}</h5>
+                                    <p class="text-muted small mb-1">
+                                            ${fn:length(news.content) > 80 ? fn:substring(news.content, 0, 80) : news.content}...
+                                    </p>
+                                    <p class="text-muted small">작성일: ${news.createdAt}</p>
+                                    <p class="text-muted small">조회수: ${news.viewCount}</p>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:when>
 
-                    <!-- 텍스트 영역 -->
-                    <div>
-                        <h5 class="fw-bold mb-2">기사 제목 예시</h5>
-                        <p class="text-muted small mb-1">
-                            기사 요약 텍스트가 여기에 들어갑니다. 여러 줄이 들어갈 수도 있어요.
-                        </p>
-                        <p class="text-muted small">작성일: 2025-01-01</p>
-                        <p class="text-muted small">조회수: 100</p>
-                    </div>
-                </div>
-
-                <!-- 복사해서 무한 리스트 UI 구성 -->
-                <div class="article-item d-flex mb-4 border-bottom">
-                    <img src="https://dummyimage.com/150x100/ced4da/6c757d" class="rounded me-3"
-                         width="150" height="100">
-                    <div>
-                        <h5 class="fw-bold mb-2">두 번째 기사 제목</h5>
-                        <p class="text-muted small mb-1">
-                            두 번째 기사 요약 텍스트입니다.
-                        </p>
-                        <p class="text-muted small">작성일: 2025-01-03</p>
-                        <p class="text-muted small">조회수: 100</p>
-                    </div>
-                </div>
+                    <c:otherwise>
+                        <div class="text-center text-muted py-5">
+                            <p>아직 게시글이 없습니다.</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>

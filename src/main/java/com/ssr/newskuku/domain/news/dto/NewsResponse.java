@@ -1,10 +1,7 @@
 package com.ssr.newskuku.domain.news.dto;
 
 import com.ssr.newskuku.domain.news.News;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,5 +22,23 @@ public class NewsResponse {
         private String category;
         private String createdAt;
         private String modifiedAt;
+    }
+
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindAll {
+        private Long newsId;
+        private String title;
+        private String content;
+        private String summary;
+        private String url;
+        private String thumbnail;
+        private String category;
+        private String createdAt;
+        private String modifiedAt;
+        private Integer viewCount; // 조회수
     }
 }
