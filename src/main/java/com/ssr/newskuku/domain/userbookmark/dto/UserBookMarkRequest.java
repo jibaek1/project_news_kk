@@ -7,7 +7,7 @@ public class UserBookMarkRequest {
     @Data
     public static class createBookMark {
         private Long BookMarkId;
-        private Long userInfoId;
+        private Long userId;
         private Long newsId;
         private String createdAt;
     }
@@ -15,7 +15,7 @@ public class UserBookMarkRequest {
     @Data
     public static class deleteBookMark {
         private Long BookMarkId;
-        private Long userInfoId;
+        private Long userId;
         private Long newsId;
         private String createdAt;
     }

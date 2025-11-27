@@ -5,31 +5,37 @@
 
 <mapper namespace="com.ssr.newskuku.domain.notification.mapper.NotificationMapper">
 
-    <insert id="insert">
-        INSERT INTO notification(user_info_id, message, type, is_read)
-        VALUES (#{userInfoId}, #{message}, #{type}, #{isRead})
+    <insert id="insert" parameterType="com.ssr.newskuku.domain.notification.Notification" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO NOTIFICATION (USER_ID, MESSAGE, TYPE, IS_READ)
+        VALUES (#{userId}, #{message}, #{type}, #{isRead})
     </insert>
 
-    <select id="findByUser" resultType="com.ssr.newskuku.domain.notification.Notification">
-        SELECT *
-        FROM notification
-        WHERE user_info_id = #{userId}
-        ORDER BY notification_id DESC
+    <select id="findByUser" parameterType="long" resultType="com.ssr.newskuku.domain.notification.Notification">
+        SELECT ID, USER_ID, MESSAGE, TYPE, IS_READ,
+        DATE_FORMAT(CREATED_AT, '%Y-%m-%d %H:%i') AS createdAt
+        FROM NOTIFICATION
+        WHERE USER_ID = #{userId}
+        ORDER BY ID DESC
     </select>
 
-    <select id="countUnread" resultType="int">
+    <select id="countUnread" parameterType="long" resultType="int">
         SELECT COUNT(*)
-        FROM notification
-        WHERE user_info_id = #{userId}
-        AND is_read = 0
+        FROM NOTIFICATION
+        WHERE USER_ID = #{userId}
+        AND IS_READ = 0
     </select>
 
     <update id="markAsRead">
-        UPDATE notification
-        SET is_read = 1
-        WHERE notification_id = #{id}
-        AND user_info_id = #{userId}
+        UPDATE NOTIFICATION
+        SET IS_READ = 1
+        WHERE ID = #{id}
+        AND USER_ID = #{userId}
     </update>
 
+    <delete id="deleteById">
+        DELETE FROM notification
+        WHERE id = #{id}
+        AND user_id = #{userId}
+    </delete>
 
 </mapper>

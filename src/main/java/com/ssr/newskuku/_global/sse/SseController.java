@@ -15,7 +15,7 @@ public class SseController {
     private final SseService sseService;
 
     @GetMapping("/connect")
-    public SseEmitter connect(@RequestParam Long userInfoId) {
-        return sseService.connect(userInfoId);
+    public SseEmitter connect(@RequestParam Long userId) {
+        return sseService.connect(userId);
     }
 }
