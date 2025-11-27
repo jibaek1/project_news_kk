@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/notice")
+@RequestMapping("/notice")
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -27,7 +27,7 @@ public class NoticeController {
     @GetMapping
     public String noticeMain(@RequestParam(defaultValue = "0") int page,
                              Model model) {
-        List<NoticeResponse.FindAll> noticeList = noticeService.getNoticeList();
+        List<NoticeResponse> noticeList = noticeService.getNoticeList();
 
         /*
         int totalPages = noticePage.getTotalPages();

@@ -8,5 +8,5 @@ import java.util.List;
 @Mapper
 public interface NoticeMapper {
 
-    List<NoticeResponse.FindAll> findAll();
+    List<NoticeResponse> findAll();
 }
