@@ -14,13 +14,13 @@ public class UserBookMarkResponse {
     @Getter
     public static class FindById {
         private final Long BookMarkId;
-        private final Long userInfoId;
+        private final Long userId;
         private final Long newsId;
         private final String createdAt;
 
-        public FindById(UserBookMark userBookMark, Long userInfoId, Long newsId) {
+        public FindById(UserBookMark userBookMark, Long userId, Long newsId) {
             this.BookMarkId = userBookMark.getBookmarkId();
-            this.userInfoId = userInfoId;
+            this.userId = userId;
             this.newsId = newsId;
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

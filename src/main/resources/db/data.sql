@@ -101,17 +101,17 @@ VALUES
 DROP TABLE IF EXISTS user_bookmark;
 CREATE TABLE user_bookmark (
     bookmark_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '북마크 ID (PK)',
-    user_info_id BIGINT NOT NULL COMMENT '사용자 ID (FK)',
+    user_id BIGINT NOT NULL COMMENT '사용자 ID (FK)',
     news_id BIGINT NOT NULL COMMENT '뉴스 ID (FK)',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
 
     PRIMARY KEY (bookmark_id),
 
-    FOREIGN KEY (user_info_id) REFERENCES user_info(user_info_id),
+    FOREIGN KEY (user_id) REFERENCES user_account(user_id),
     FOREIGN KEY (news_id) REFERENCES news(news_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO user_bookmark (user_info_id, news_id, created_at)
+INSERT INTO user_bookmark (user_id, news_id, created_at)
 VALUES
     (1, 1, CURRENT_TIMESTAMP),
     (2, 2, CURRENT_TIMESTAMP);
