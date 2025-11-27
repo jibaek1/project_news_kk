@@ -46,4 +46,10 @@ public class UserBookMarkService {
         return userBookMarkMapper.countByUser(userId);
     }
 
+    // 북마크 여부 확인 (상태 표시용)
+    public boolean isBookmarked(Long userInfoId, Long newsId) {
+        UserBookMark exist = userBookMarkMapper.findByUserAndNews(userInfoId, newsId);
+        return exist != null;
+    }
+
 }

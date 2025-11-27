@@ -38,9 +38,20 @@
 
                 <!-- 오른쪽 내용 -->
                 <div class="col-lg-7">
-                    <h1 class="display-5 fw-bold mb-3" style="line-height: 1.3;">
-                        ${news.title}
-                    </h1>
+                    <!-- 제목과 북마크 버튼 -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h1 class="display-5 fw-bold" style="line-height: 1.3; flex: 1;">
+                            ${news.title}
+                        </h1>
+
+                        <!-- 북마크 버튼 -->
+                        <button id="bookmarkBtn"
+                                class="btn ${isBookmarked ? 'btn-warning' : 'btn-outline-warning'} btn-lg ms-3"
+                                style="min-width: 50px;"
+                                onclick="toggleBookmark(${news.newsId})">
+                            <i id="bookmarkIcon" class="bi bi-bookmark${isBookmarked ? '-fill' : ''}"></i>
+                        </button>
+                    </div>
 
                     <!-- 메타 정보 -->
                     <div class="d-flex flex-wrap gap-3 mb-4 text-muted align-items-center">
@@ -86,9 +97,44 @@
         </div>
     </section>
 
-    <%-- 하단 푸터 include는 여기 --%>
     <%@ include file="/WEB-INF/layout/footer.jsp" %>
 </div>
+
+<script>
+    function toggleBookmark(newsId) {
+        const btn = document.getElementById('bookmarkBtn');
+        const icon = document.getElementById('bookmarkIcon');
+
+        fetch('/news/bookmark/' + newsId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success === false) {
+                    alert(data.message || '북마크 처리 중 오류가 발생했습니다.');
+                    return;
+                }
+
+                // 북마크 상태에 따라 UI 변경
+                if (data.bookmarked) {
+                    icon.className = 'bi bi-bookmark-fill';
+                    btn.classList.remove('btn-outline-warning');
+                    btn.classList.add('btn-warning');
+                } else {
+                    icon.className = 'bi bi-bookmark';
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-outline-warning');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('북마크 처리 중 오류가 발생했습니다.');
+            });
+    }
+</script>
 
 <style>
     /* 스크롤 시 왼쪽 이미지 고정 */
@@ -103,4 +149,11 @@
     .card:hover { transform: translateY(-2px); }
     /* 제목 색상 */
     h1 { color: #1a1a1a; }
+    /* 북마크 버튼 효과 */
+    #bookmarkBtn {
+        transition: all 0.3s ease;
+    }
+    #bookmarkBtn:hover {
+        transform: scale(1.1);
+    }
 </style>
