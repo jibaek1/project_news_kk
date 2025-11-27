@@ -37,13 +37,13 @@ public class UserBookMarkService {
     }
 
     // 북마크 전체 조회 기능
-    public List<UserBookMarkResponse.FindAll> findAllBookMark(Long userInfoId, int page, int size) {
+    public List<UserBookMarkResponse.FindAll> findAllBookMark(Long userId, int page, int size) {
         int offset = page * size;
-        return userBookMarkMapper.findAll(userInfoId, size, offset);
+        return userBookMarkMapper.findAll(userId, size, offset);
     }
 
-    public int count(Long userInfoId) {
-        return userBookMarkMapper.countByUser(userInfoId);
+    public int count(Long userId) {
+        return userBookMarkMapper.countByUser(userId);
     }
 
 }

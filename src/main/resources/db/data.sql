@@ -87,31 +87,31 @@ CREATE TABLE news (
     summary VARCHAR(4000) NULL COMMENT '뉴스 요약',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-
+    view_count INT NOT NULL DEFAULT 0 COMMENT '조회수',
     published_at VARCHAR(20) NULL COMMENT '기사 작성 시간',
     PRIMARY KEY (news_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO news (title, content, url, category, thumbnail, is_write, published_at)
+INSERT INTO news (title, content, url, category, thumbnail, is_write, published_at, view_count)
 VALUES
-('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '정치', NULL, 0, '11-21 10:23'),
-('두 번째 뉴스 제목', '두 번째 뉴스 본문 내용입니다.', 'https://news.example.com/2', '정치', NULL, 0, '11-21 11:01'),
-('세 번째 뉴스 제목', '세 번째 뉴스 본문 내용입니다.', 'https://news.example.com/3', '정치', NULL, 0, '11-21 08:55');
+('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '정치', NULL, 0, '11-21 10:23', 0),
+('두 번째 뉴스 제목', '두 번째 뉴스 본문 내용입니다.', 'https://news.example.com/2', '정치', NULL, 0, '11-21 11:01', 0),
+('세 번째 뉴스 제목', '세 번째 뉴스 본문 내용입니다.', 'https://news.example.com/3', '정치', NULL, 0, '11-21 08:55', 0);
 
 DROP TABLE IF EXISTS user_bookmark;
 CREATE TABLE user_bookmark (
     bookmark_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '북마크 ID (PK)',
-    user_info_id BIGINT NOT NULL COMMENT '사용자 ID (FK)',
+    user_id BIGINT NOT NULL COMMENT '사용자 ID (FK)',
     news_id BIGINT NOT NULL COMMENT '뉴스 ID (FK)',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
 
     PRIMARY KEY (bookmark_id),
 
-    FOREIGN KEY (user_info_id) REFERENCES user_info(user_info_id),
+    FOREIGN KEY (user_id) REFERENCES user_account(user_id),
     FOREIGN KEY (news_id) REFERENCES news(news_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO user_bookmark (user_info_id, news_id, created_at)
+INSERT INTO user_bookmark (user_id, news_id, created_at)
 VALUES
     (1, 1, CURRENT_TIMESTAMP),
     (2, 2, CURRENT_TIMESTAMP);

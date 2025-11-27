@@ -15,7 +15,7 @@ import org.apache.ibatis.type.Alias;
 public class UserBookMark extends BaseEntity {
 
     private Long bookmarkId;
-    private Long userInfoId;
+    private Long userId;
     private Long newsId;
 
 }

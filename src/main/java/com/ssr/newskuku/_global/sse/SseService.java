@@ -13,8 +13,8 @@ public class SseService {
     private final SseEmitterRepository repository;
     private static final Long DEFAULT_TIMEOUT = 1000L * 60 * 30;
 
-    public SseEmitter connect(Long userInfoId) {
-        String emitterId = SseKey.generateId(userInfoId);
+    public SseEmitter connect(Long userId) {
+        String emitterId = SseKey.generateId(userId);
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
         repository.save(emitterId, emitter);
@@ -35,8 +35,8 @@ public class SseService {
         return emitter;
     }
 
-    public void send(Long userInfoId, Object data) {
-        String emitterId = SseKey.generateId(userInfoId);
+    public void send(Long userId, Object data) {
+        String emitterId = SseKey.generateId(userId);
         SseEmitter emitter = repository.get(emitterId);
 
         if (emitter == null) return;
