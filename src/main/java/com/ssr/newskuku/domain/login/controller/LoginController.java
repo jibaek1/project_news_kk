@@ -17,7 +17,7 @@ public class LoginController {
         return "index";
     }
 
-    @GetMapping("/login")
+    @GetMapping("auth/login")
     public String login(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "message", required = false) String message,
@@ -30,6 +30,11 @@ public class LoginController {
             model.addAttribute("message", message);
         }
 
-        return "login";
+        return "auth/login";
+    }
+
+    @GetMapping("regist")
+    public String registForm() {
+        return "auth/regist";
     }
 }
