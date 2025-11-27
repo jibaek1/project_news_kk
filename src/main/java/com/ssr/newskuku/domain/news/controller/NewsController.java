@@ -25,6 +25,7 @@ public class NewsController {
     private final JobLauncher jobLauncher;
     private final Job summarizeNewsJob;
     private final UserBookMarkService userBookMarkService;
+    private final UserBookMarkMapper userBookMarkMapper;
 
     @GetMapping
     public String newsList(Model model) {
@@ -47,12 +48,13 @@ public class NewsController {
         NewsResponse.FindById news = newsService.getNewsId(id);
         model.addAttribute("news", news);
 
-        // 북마크 상태 확인
+        // 북마크 상태 확인 - 매퍼 직접 사용
         Long userInfoId = (Long) session.getAttribute("userInfoId");
         boolean isBookmarked = false;
 
         if (userInfoId != null) {
-            isBookmarked = userBookMarkService.isBookmarked(userInfoId, id);
+            UserBookMark bookmark = userBookMarkMapper.findByUserAndNews(userInfoId, id);
+            isBookmarked = (bookmark != null);
         }
 
         model.addAttribute("isBookmarked", isBookmarked);
@@ -60,10 +62,10 @@ public class NewsController {
         return "news/detail";
     }
 
-    // 북마크 토글 (AJAX용)
-    @PostMapping("/detail/{id}/bookmark")
+    // 북마크 토글
+    @PostMapping("/bookmark/{newsId}")
     @ResponseBody
-    public Map<String, Object> toggleBookmark(@PathVariable Long id, HttpSession session) {
+    public Map<String, Object> toggleBookmark(@PathVariable Long newsId, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
 
         Long userInfoId = (Long) session.getAttribute("userInfoId");
@@ -74,7 +76,7 @@ public class NewsController {
             return response;
         }
 
-        boolean bookmarked = userBookMarkService.toggle(userInfoId, id);
+        boolean bookmarked = userBookMarkService.toggle(userInfoId, newsId);
 
         response.put("success", true);
         response.put("bookmarked", bookmarked);
