@@ -71,7 +71,7 @@
             <div class="d-flex">
 
                 <!-- 비로그인 상태: 로그인 버튼 표시 -->
-                <a class="btn btn-outline-dark me-2" href="/login">
+                <a class="btn btn-outline-dark me-2" href="auth/login">
                     로그인
                 </a>
 
