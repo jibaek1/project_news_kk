@@ -57,6 +57,7 @@
                     <div class="d-flex flex-wrap gap-3 mb-4 text-muted align-items-center">
                         <span><i class="bi bi-calendar3"></i> ${news.createdAt}</span>
                         <span><i class="bi bi-pencil"></i> ${news.modifiedAt}</span>
+                        <span><i class="bi bi-eye"></i> ${news.viewCount}</span>
                         <span><span class="badge bg-secondary">${news.category}</span></span>
                         <span><i class="bi bi-link-45deg"></i>
                             <a href="${news.url}" target="_blank" class="text-decoration-none">원문 보기</a>
