@@ -62,7 +62,7 @@
                 <!-- CENTER MENU (기사거리 / 커뮤니티 / 공지사항) -->
                 <div class="menu-center d-flex justify-content-evenly flex-grow-1">
                     <a class="nav-link mx-2" href="/news">기사거리</a>
-                    <a class="nav-link mx-2" href="/community/list">커뮤니티</a>
+                    <a class="nav-link mx-2" href="/community">커뮤니티</a>
                     <a class="nav-link mx-2" href="/notice">공지사항</a>
                 </div>
             </div>
@@ -71,7 +71,6 @@
             <div class="d-flex">
 
                 <!-- 비로그인 상태: 로그인 버튼 표시 -->
-                <!--
                 <a class="btn btn-outline-dark me-2" href="/auth/login">
                     로그인
                 </a>
