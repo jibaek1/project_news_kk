@@ -15,18 +15,17 @@ VALUES ('첫 공지', '환영합니다!');
 
 DROP TABLE IF EXISTS user_account;
 CREATE TABLE user_account (
-    user_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '사용자 ID (PK)',
-    email VARCHAR(255) NOT NULL COMMENT '이메일 주소',
-    password VARCHAR(255) NULL COMMENT '암호화된 비밀번호',
-    provider ENUM('LOCAL', 'KAKAO', 'GOOGLE', 'NAVER', 'GITHUB') NOT NULL COMMENT '소셜 로그인 제공자',
-    social_id VARCHAR(255) NOT NULL COMMENT '소셜 로그인 고유 ID',
-    status ENUM('ACTIVE', 'INACTIVE', 'BLOCKED', 'DELETED') NOT NULL COMMENT '계정 상태',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-
+    user_id BIGINT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NULL,
+    provider VARCHAR(50) NOT NULL,
+    social_id VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
-    UNIQUE KEY uk_user_social_id (social_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    UNIQUE (provider, social_id)
+);
 
 INSERT INTO user_account (email, password, provider, social_id, status, created_at)
 VALUES
@@ -47,30 +46,31 @@ VALUES
 
 DROP TABLE IF EXISTS user_category;
 CREATE TABLE user_category (
-    user_category_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '사용자 관심사 ID (PK)',
-    user_id BIGINT NOT NULL COMMENT '회원 ID',
-    category_id BIGINT NOT NULL COMMENT '카테고리 ID',
-
+    user_category_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_category_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 
 DROP TABLE IF EXISTS user_info;
 CREATE TABLE user_info (
-    user_info_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '사용자 정보 고유 ID',
-    user_id BIGINT NOT NULL COMMENT '사용자 ID',
-    profile_image VARCHAR(255) NULL COMMENT '프로필 이미지 URL',
-    birthdate VARCHAR(255) NULL COMMENT '생년월일',
-    gender ENUM('MALE', 'FEMALE') NULL COMMENT '성별',
-    nickname VARCHAR(255) NULL COMMENT '닉네임',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-
+    user_info_id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    profile_image VARCHAR(255) NULL,
+    birth_date VARCHAR(255) NULL,
+    gender VARCHAR(10) NULL,
+    nickname VARCHAR(255) NULL,
+    phoneNumber VARCHAR(20) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_info_id),
     FOREIGN KEY (user_id) REFERENCES user_account (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
-INSERT INTO user_info (user_id, profile_image, birthdate, gender, nickname, created_at)
+INSERT INTO user_info (user_id, profile_image, birth_date, gender, nickname, created_at)
 VALUES
     (1, 'https://cdn.example.com/user1.png', '1995-04-21', 'MALE', '개발자황', CURRENT_TIMESTAMP),
     (2, NULL, '1999-12-05', 'FEMALE', '코딩요정', CURRENT_TIMESTAMP);

@@ -117,16 +117,19 @@ public class UserService {
             gender = Gender.valueOf(request.getGender().toUpperCase());
         }
 
-        // 추가 정보 업데이트
-        userInfoMapper.updateAdditionalInfo(userId, gender, request.getBirthDate());
-
-        // 닉네임, 모바일 업데이트
+        if (request.getBirthDate() != null) {
+            userInfo.setBirthDate(request.getBirthDate());
+        }
+        if (gender != null) {
+            userInfo.setGender(gender);
+        }
         if (request.getNickname() != null) {
             userInfo.setNickname(request.getNickname());
         }
-        if (request.getPhoneNumber() != null) {
+        if (request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
             userInfo.setPhoneNumber(request.getPhoneNumber());
         }
+
         userInfoMapper.update(userInfo);
 
         // 카테고리 업데이트

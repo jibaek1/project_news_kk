@@ -61,7 +61,9 @@
             서비스 이용을 위해 아래 정보를 입력해주세요.
         </p>
 
-        <form method="post" enctype="multipart/form-data">
+        <form action="/regist" method="post" enctype="multipart/form-data">
+            <!-- userId hidden input 추가 -->
+            <input type="hidden" name="userId" value="${userId}">
 
             <!-- 프로필 사진 -->
             <div class="text-center mb-4">
@@ -79,27 +81,34 @@
 
             <!-- 닉네임 -->
             <div class="mb-3">
-                <label class="form-label fw-semibold">닉네임</label>
-                <input type="text" name="nickname" class="form-control" placeholder="닉네임을 입력하세요">
+                <label class="form-label fw-semibold">닉네임 <span class="text-danger">*</span></label>
+                <input type="text" name="nickname" class="form-control"
+                       placeholder="닉네임을 입력하세요"
+                       value="${nickname != null ? nickname : ''}" required>
             </div>
 
             <!-- 생년월일 -->
             <div class="mb-3">
-                <label class="form-label fw-semibold">생년월일</label>
-                <input type="date" name="birthDate" class="form-control">
+                <label class="form-label fw-semibold">생년월일 <span class="text-danger">*</span></label>
+                <input type="date" name="birthDate" class="form-control"
+                       value="${birthDate != null ? birthDate : ''}" required>
             </div>
 
             <!-- 성별 -->
             <div class="mb-3">
-                <label class="form-label fw-semibold">성별</label>
+                <label class="form-label fw-semibold">성별 <span class="text-danger">*</span></label>
                 <div class="d-flex gap-3 mt-1">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" value="MALE" id="genderMale">
+                        <input class="form-check-input" type="radio" name="gender"
+                               value="MALE" id="genderMale"
+                               ${gender == 'MALE' ? 'checked' : ''} required>
                         <label class="form-check-label" for="genderMale">남성</label>
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" value="FEMALE" id="genderFemale">
+                        <input class="form-check-input" type="radio" name="gender"
+                               value="FEMALE" id="genderFemale"
+                               ${gender == 'FEMALE' ? 'checked' : ''} required>
                         <label class="form-check-label" for="genderFemale">여성</label>
                     </div>
                 </div>
@@ -113,21 +122,28 @@
 
             <!-- 관심 카테고리 -->
             <div class="mb-3">
-                <label class="form-label fw-semibold d-block mb-2">관심 카테고리</label>
+                <label class="form-label fw-semibold d-block mb-2">
+                    관심 카테고리 <span class="text-danger">*</span>
+                </label>
+                <p class="text-muted small">최소 1개 이상 선택해주세요</p>
 
-                <!-- DB에서 받아올 부분 예시 -->
+                <!-- 실제 categoryIds로 전송 -->
                 <div class="d-flex flex-wrap">
-                    <span class="category-tag">정치</span>
-                    <span class="category-tag">경제</span>
-                    <span class="category-tag">IT</span>
-                    <span class="category-tag">건강</span>
-                    <span class="category-tag">오락</span>
-                    <span class="category-tag">스포츠</span>
+                    <span class="category-tag" data-category-id="1">정치</span>
+                    <span class="category-tag" data-category-id="2">경제</span>
+                    <span class="category-tag" data-category-id="3">사회</span>
+                    <span class="category-tag" data-category-id="4">문화</span>
+                    <span class="category-tag" data-category-id="5">스포츠</span>
+                    <span class="category-tag" data-category-id="6">IT/과학</span>
                 </div>
+
+                <!-- 선택된 카테고리 ID를 저장할 hidden inputs -->
+                <div id="categoryInputs"></div>
             </div>
 
             <!-- 완료 버튼 -->
-            <button type="submit" class="btn btn-primary w-100 mt-3" style="padding: 10px; border-radius: 10px;">
+            <button type="submit" class="btn btn-primary w-100 mt-3"
+                    style="padding: 10px; border-radius: 10px;">
                 정보 저장하고 시작하기
             </button>
 
@@ -147,10 +163,37 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    // 카테고리 선택 토글
+    // 카테고리 선택 토글 및 hidden input 생성
+    const categoryInputsDiv = document.getElementById('categoryInputs');
+
     document.addEventListener("click", function(e) {
         if (e.target.classList.contains("category-tag")) {
             e.target.classList.toggle("active");
+            updateCategoryInputs();
+        }
+    });
+
+    function updateCategoryInputs() {
+        // 기존 hidden inputs 제거
+        categoryInputsDiv.innerHTML = '';
+
+        // 선택된 카테고리들의 hidden input 생성
+        document.querySelectorAll('.category-tag.active').forEach(tag => {
+            const categoryId = tag.getAttribute('data-category-id');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'categoryIds';
+            input.value = categoryId;
+            categoryInputsDiv.appendChild(input);
+        });
+    }
+
+    // 폼 제출 시 카테고리 선택 검증
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const selectedCategories = document.querySelectorAll('.category-tag.active');
+        if (selected Categories.length === 0) {
+            e.preventDefault();
+            alert('관심 카테고리를 최소 1개 이상 선택해주세요.');
         }
     });
 </script>
