@@ -23,8 +23,15 @@
 
     <!-- 3. 게시글 생성 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="communityId">
-        INSERT INTO news_community (user_id, title, content, created_at, updated_at)
-        VALUES (#{userId}, #{title}, #{content}, NOW(), NOW())
+        INSERT INTO news_community (user_id, title, content, tag, created_at, updated_at)
+        VALUES (
+        #{userId},
+        #{title},
+        #{content},
+        COALESCE(#{tag}, '자유'),
+        NOW(),
+        NOW()
+        )
     </insert>
 
     <!-- 4. 게시글 수정 -->
