@@ -1,8 +1,12 @@
 package com.ssr.newskuku.domain.community.controller;
 
+import com.ssr.newskuku._global.common.PageLink;
+import com.ssr.newskuku._global.common.PageUtils;
 import com.ssr.newskuku.domain.community.NewsCommunity;
+import com.ssr.newskuku.domain.community.mapper.CommunityMapper;
 import com.ssr.newskuku.domain.community.service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +20,42 @@ public class CommunityController {
     @Autowired
     private CommunityService communityService;
 
+    @Autowired
+    private CommunityMapper communityMapper;
+
     // 1. 전체 조회
     @GetMapping
     public String list(
-            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(required = false) String keyword,
             Model model
     ){
-        List<NewsCommunity> communities = communityService.getAllCommunities(page, 10);
-        model.addAttribute("communities", communities);
-        model.addAttribute("page", page);
-        return "community/list";
+    int pageSize = 10;
+    if (page < 0) {
+        page = 0;
+    }
+
+    int offset = page * pageSize;
+
+    List<NewsCommunity> communities;
+    int totalCount;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            communities = communityMapper.findByKeyword(keyword.trim(), offset, pageSize);
+            totalCount = communityMapper.countByKeyword(keyword.trim());
+        } else {
+            communities = communityMapper.selectAllCommunities(offset, pageSize);
+            totalCount = communityMapper.countAll();
+        }
+
+    List<PageLink> pageLinks = PageUtils.createPageLinks(page, pageSize, totalCount);
+
+    model.addAttribute("communities", communities);
+    model.addAttribute("pageLinks", pageLinks);
+    model.addAttribute("page", page);
+    model.addAttribute("keyword", keyword);
+
+    return "community/list";
     }
 
     // 2. 상세보기
@@ -83,13 +113,13 @@ public class CommunityController {
         newsCommunity.setTag(tag);
 
         communityService.update(newsCommunity);
-        return "redirect:/community/detail?communityId=" + communityId;  // ✅ 상세 페이지로 리다이렉트
+        return "redirect:/community/detail?communityId=" + communityId;
     }
 
     // 7. 게시글 삭제
     @PostMapping("/delete/{id}")
     public String deletePost(@PathVariable Long id){
         communityService.delete(id);
-        return "redirect:/community";  // ✅ 리스트 페이지로 리다이렉트
+        return "redirect:/community";
     }
 }
