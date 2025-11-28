@@ -26,5 +26,20 @@ public interface NewsMapper {
     void updateNewsSummary(@Param("newsId") Long newsId, @Param("summary") String summary);
 
     // 뉴스 전체보기
-    List<NewsResponse.FindAll> findAll();
+    List<NewsResponse.FindAll> findAll(
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    // 검색
+    List<NewsResponse.FindAll> findByKeyword(
+            @Param("keyword") String keyword,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    int countByKeyword(@Param("keyword") String keyword);
+
+    int countAll();
+
 }

@@ -147,8 +147,8 @@ public class NewsService {
     }
 
     // 전체불러오기
-    public List<NewsResponse.FindAll> findAll() {
-        return newsMapper.findAll();
+    public List<NewsResponse.FindAll> findAll(int offset, int limit) {
+        return newsMapper.findAll(offset, limit);
     }
 
     // 상세보기
