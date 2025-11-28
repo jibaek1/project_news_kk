@@ -11,6 +11,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -68,10 +69,6 @@ public class NewsService {
                 Document doc = crawler.getDocument(categoryUrl + "/" + page);
                 for (Element item : doc.select("div.news-con")) {
 
-                    // 파싱
-                    String title = parser.getTitle(item);
-                    if (title.isBlank()) continue;
-
                     String link = parser.getLink(item);
                     if (link.isBlank()) continue;
 
@@ -81,24 +78,13 @@ public class NewsService {
                     // 상세페이지
                     Document detail = crawler.getDocument(link);
 
+                    String title = parser.getTitle(detail);
+                    if (title.isBlank()) continue;
+
                     // 상세 페이지 data-publishdate 가져오기
-                    String realPublishedAt = parser.getRealPublishedAt(detail);
-                    if (realPublishedAt.isBlank()) continue;
+                    LocalDateTime realPublishedAt = parser.getPublishedAt(detail);
 
                     boolean isYesterday = parser.isYesterdayArticle(realPublishedAt);
-
-                    // 어제 기사구간 시작했는데 어제가 아닌 기사가 나오면 -> 카운트 증가
-                    if (!isYesterday && yesterdayStarted) {
-
-                        nonYesterdayCount++;
-
-                        // 20번 연속 어제가 아니면, 어제 기사 구간이 끝났다고 판단 -> 종료
-                        if (nonYesterdayCount >= 20) {
-                            return savedCount;
-                        }
-
-                        continue;
-                    }
 
                     // 어제 기사만 저장
                     if (isYesterday) {
