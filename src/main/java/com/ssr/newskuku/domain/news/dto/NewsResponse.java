@@ -22,6 +22,7 @@ public class NewsResponse {
         private String category;
         private String createdAt;
         private String modifiedAt;
+        private Integer viewCount;
     }
 
 

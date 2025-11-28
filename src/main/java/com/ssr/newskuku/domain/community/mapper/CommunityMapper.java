@@ -35,4 +35,14 @@ public interface CommunityMapper {
     // 5. 게시글 삭제
     void delete(Long id);
 
+    // 6. 검색
+    List<NewsCommunity> findByKeyword(
+            @Param("keyword") String keyword,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    int countByKeyword(@Param("keyword") String keyword);
+
+    int countAll();
 }

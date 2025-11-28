@@ -20,6 +20,7 @@
             view_count as viewCount
         FROM news
         ORDER BY news_id DESC
+            LIMIT #{limit} OFFSET #{offset}
     </select>
 
 
@@ -50,6 +51,7 @@
             url,
             thumbnail,
             category,
+            view_count as viewCount,
             FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
             FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
         FROM news
@@ -75,5 +77,36 @@
         WHERE news_id = #{newsId}
     </update>
 
+    <!-- 제목으로 검색 (페이징) -->
+    <select id="findByKeyword" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">
+        SELECT
+            news_id as newsId,
+            title,
+            content,
+            summary,
+            url,
+            thumbnail,
+            category,
+            created_at as createdAt,
+            modified_at as modifiedAt,
+            view_count as viewCount
+        FROM news
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY news_id DESC
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 검색 결과 개수 -->
+    <select id="countByKeyword" resultType="int">
+        SELECT COUNT(*)
+        FROM news
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <!-- 전체 뉴스 개수 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM news
+    </select>
 
 </mapper>

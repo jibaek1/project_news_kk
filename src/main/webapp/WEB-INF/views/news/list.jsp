@@ -7,7 +7,7 @@
 <style>
     /* 라벨 + 조건 박스 전체 스타일 */
     .filter-row {
-        background-color: #f8f9fa; /* Bootstrap 기본 배경과 자연스럽게 맞춤 */
+        background-color: #f8f9fa;
         border: 1px solid #dee2e6;
         border-radius: 12px;
         padding: 14px 18px;
@@ -24,7 +24,7 @@
     .filter-option {
         padding: 5px 14px;
         border: 1px solid #ced4da;
-        border-radius: 20px; /* pill style */
+        border-radius: 20px;
         background-color: white;
         cursor: pointer;
         transition: all 0.15s ease-in-out;
@@ -48,12 +48,12 @@
     <div class="page-content">
         <div class="container mt-5">
 
-            <!-- ===================== 페이지 타이틀 ===================== -->
+            <!-- 페이지 타이틀 -->
             <div class="text-center my-4">
                 <h2 class="fw-bold" style="font-size: 2rem;">기사거리</h2>
             </div>
 
-            <!-- ===================== 1. 카테고리 ===================== -->
+            <!-- 1. 카테고리 -->
             <div class="filter-row d-flex align-items-center flex-wrap">
                 <div class="filter-label">카테고리 |</div>
                 <div class="filter-option active">전체</div>
@@ -64,7 +64,7 @@
                 <div class="filter-option">IT</div>
             </div>
 
-            <!-- ===================== 2. 나이대별 관심사 ===================== -->
+            <!-- 2. 나이대별 관심사 -->
             <div class="filter-row d-flex align-items-center flex-wrap">
                 <div class="filter-label">나이대별 관심사 |</div>
                 <div class="filter-option active">전체</div>
@@ -74,24 +74,32 @@
                 <div class="filter-option">50대 이상</div>
             </div>
 
-            <!-- ===================== 3. 검색바 ===================== -->
+            <!-- 3. 검색바 -->
             <div class="search-bar mb-4">
-                <form class="d-flex gap-2">
-                    <input class="form-control" type="text" placeholder="제목으로 검색" />
+                <form method="get" action="/news" class="d-flex gap-2">
+                    <input class="form-control" type="text" name="keyword" placeholder="제목으로 검색" value="${keyword}" />
                     <button class="btn btn-primary" type="submit">검색</button>
                 </form>
             </div>
 
-            <!-- ===================== 4. 기사 리스트 (B 스타일) ===================== -->
+            <!-- 검색 결과 표시 -->
+            <c:if test="${not empty keyword}">
+                <div class="alert alert-info d-flex justify-content-between align-items-center">
+                    <span>'<strong>${keyword}</strong>' 검색 결과</span>
+                    <a href="/news" class="btn btn-sm btn-outline-secondary">전체 보기</a>
+                </div>
+            </c:if>
+
+            <!-- 4. 기사 리스트 -->
             <div class="article-list">
                 <c:choose>
-                    <c:when test="${not empty news}">
-                        <c:forEach var="news" items="${news}">
-                            <div class="article-item d-flex mb-4 border-bottom"
+                    <c:when test="${not empty newsList}">
+                        <c:forEach var="news" items="${newsList}">
+                            <div class="article-item d-flex mb-4 border-bottom pb-3"
                                  onclick="location.href='/news/detail/${news.newsId}'"
                                  style="cursor: pointer;">
 
-                                <!-- 썸네일 (DB 값 없으면 기본 이미지) -->
+                                <!-- 썸네일 -->
                                 <img src="${empty news.thumbnail ? 'https://dummyimage.com/150x100/ced4da/6c757d' : news.thumbnail}"
                                      class="rounded me-3" alt="thumbnail" width="150" height="100">
 
@@ -101,8 +109,9 @@
                                     <p class="text-muted small mb-1">
                                             ${fn:length(news.content) > 80 ? fn:substring(news.content, 0, 80) : news.content}...
                                     </p>
-                                    <p class="text-muted small">작성일: ${news.createdAt}</p>
-                                    <p class="text-muted small">조회수: ${news.viewCount}</p>
+                                    <p class="text-muted small mb-0">
+                                        작성일: ${news.createdAt} | 조회수: ${news.viewCount}
+                                    </p>
                                 </div>
                             </div>
                         </c:forEach>
@@ -110,12 +119,41 @@
 
                     <c:otherwise>
                         <div class="text-center text-muted py-5">
-                            <p>아직 게시글이 없습니다.</p>
+                            <p>검색 결과가 없습니다.</p>
                         </div>
                     </c:otherwise>
                 </c:choose>
             </div>
+
+            <!-- 페이징 -->
+            <c:if test="${not empty pageLinks && fn:length(pageLinks) > 0}">
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <c:if test="${currentPage > 0}">
+                            <li class="page-item">
+                                <a class="page-link" href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">이전</a>
+                            </li>
+                        </c:if>
+
+                        <c:forEach items="${pageLinks}" var="link">
+                            <li class="page-item ${link.current ? 'active' : ''}">
+                                <a class="page-link" href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                        ${link.number}
+                                </a>
+                            </li>
+                        </c:forEach>
+
+                        <c:if test="${currentPage < fn:length(pageLinks) - 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">다음</a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </c:if>
+
         </div>
     </div>
-    <%@ include file="/WEB-INF/layout/footer.jsp" %>
 </div>
+
+<%@ include file="/WEB-INF/layout/footer.jsp" %>
