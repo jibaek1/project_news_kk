@@ -51,6 +51,7 @@
             url,
             thumbnail,
             category,
+            view_count as viewCount,
             FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
             FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
         FROM news
