@@ -1,7 +1,11 @@
 package com.ssr.newskuku.domain.news.controller;
 
+import com.ssr.newskuku._global.common.PageLink;
+import com.ssr.newskuku._global.common.PageUtils;
+import com.ssr.newskuku.domain.news.News;
 import com.ssr.newskuku.domain.news.NewsService;
 import com.ssr.newskuku.domain.news.dto.NewsResponse;
+import com.ssr.newskuku.domain.news.mapper.NewsMapper;
 import com.ssr.newskuku.domain.userbookmark.UserBookMark;
 import com.ssr.newskuku.domain.userbookmark.UserBookMarkService;
 import com.ssr.newskuku.domain.userbookmark.mapper.UserBookMarkMapper;
@@ -26,11 +30,41 @@ public class NewsController {
     private final Job summarizeNewsJob;
     private final UserBookMarkService userBookMarkService;
     private final UserBookMarkMapper userBookMarkMapper;
+    private final NewsMapper newsMapper;
 
     @GetMapping
-    public String newsList(Model model) {
-        List<NewsResponse.FindAll> newsList = newsService.findAll();
-        model.addAttribute("news", newsList);
+    public String list(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(required = false) String keyword,
+            Model model
+    ) {
+        int pageSize = 10;
+
+        if (page < 0) {
+            page = 0;
+        }
+
+        int offset = page * pageSize;
+
+        List<NewsResponse.FindAll> newsList;  // ✅ 타입 변경
+        int totalCount;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            newsList = newsMapper.findByKeyword(keyword.trim(), offset, pageSize);
+            totalCount = newsMapper.countByKeyword(keyword.trim());
+        } else {
+            newsList = newsMapper.findAll(offset, pageSize);
+            totalCount = newsMapper.countAll();
+        }
+
+        // PageUtils 사용
+        List<PageLink> pageLinks = PageUtils.createPageLinks(page, pageSize, totalCount);
+
+        model.addAttribute("newsList", newsList);
+        model.addAttribute("pageLinks", pageLinks);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
+
         return "news/list";
     }
 
