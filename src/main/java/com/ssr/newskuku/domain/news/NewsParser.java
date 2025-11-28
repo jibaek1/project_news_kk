@@ -5,38 +5,37 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
 public class NewsParser {
 
-    public String getTitle(Element item) {
-        return item.select("span.title01").text();
-    }
-
     public String getLink(Element item) {
         return item.select("a.tit-news").attr("href");
     }
 
-    public String getRealPublishedAt(Document detail) {
-        String date = detail.select(".update-time").attr("data-published-time");
-        return date != null ? date.trim() : "";
+    public String getTitle(Element detail) {
+        return detail.select("header.title-article01 > h1.tit01").text();
     }
 
-    public boolean isYesterdayArticle(String dateTime) {
-        if (dateTime == null || dateTime.isBlank()) return false;
+    public LocalDateTime getPublishedAt(Document detail) {
+        String dateStr = detail
+                .select("div.update-time[data-published-time]")
+                .attr("data-published-time");
 
-        try {
-            String datePart = dateTime.split(" ")[0];
+        if (dateStr == null || dateStr.isBlank()) return null;
 
-            String yesterday = LocalDate.now()
-                    .minusDays(1)
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return LocalDateTime.parse(dateStr.trim(),formatter);
+    }
 
-            return datePart.equals(yesterday);
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean isYesterdayArticle(LocalDateTime publishedAt) {
+        if (publishedAt == null) return false;
+
+        LocalDate yesterday = LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1);
+        return publishedAt.toLocalDate().isEqual(yesterday);
     }
 
     public String getContent(Document doc) {
