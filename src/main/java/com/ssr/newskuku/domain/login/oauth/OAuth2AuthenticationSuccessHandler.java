@@ -1,8 +1,11 @@
 package com.ssr.newskuku.domain.login.oauth;
 
+import com.ssr.newskuku.domain.login.UserInfo;
+import com.ssr.newskuku.domain.login.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -19,11 +22,20 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final UserService userService;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         log.info("OAuth2 인증 성공");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        Long userId = (Long) oAuth2User.getAttributes().get("userId");
+
+        // 세션에 로그인 사용자 정보 저장
+        UserInfo loginUser = userService.getUserInfo(userId);
+        HttpSession session = request.getSession();
+        session.setAttribute("loginUser", loginUser);
+
 
         if (response.isCommitted()) {
             log.warn("Response already committed. Cannot redirect.");
@@ -32,8 +44,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (oAuth2User.getAttributes().containsKey("needsAdditionalInfo") &&
                 (boolean) oAuth2User.getAttributes().get("needsAdditionalInfo")) {
-
-            Long userId = (Long) oAuth2User.getAttributes().get("userId");
 
             StringBuilder urlBuilder = new StringBuilder("/regist?userId=").append(userId);
 
