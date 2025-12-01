@@ -43,7 +43,7 @@ public class NewsParser {
     }
 
     public String getThumbnail(Document doc) {
-        return doc.select(".img-con01 img").attr("src");
+        return doc.select("img[data-pop-open=pop-photo]").attr("src");
     }
 
     public String getCategory(Document doc) {
