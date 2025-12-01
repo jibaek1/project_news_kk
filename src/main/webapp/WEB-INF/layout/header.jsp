@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <html lang="kr">
@@ -68,20 +69,53 @@
             </div>
 
             <!-- RIGHT: Login 상태에 따라 표시 -->
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
 
-                <!-- 비로그인 상태: 로그인 버튼 표시 -->
-                <a class="btn btn-outline-dark me-2" href="/auth/login">
-                    로그인
-                </a>
-                -->
-                <!-- 로그인 상태: (나중에 조건부로 변경할 자리) -->
-                <!---->
-                <a class="btn btn-outline-primary" href="/myPage">
-                    홍길동님
-                </a>
+                <%-- 1. 로그인 상태일 때 --%>
+                <sec:authorize access="isAuthenticated()">
+                    <sec:authentication property="principal" var="principal"/>
 
+                    <%-- 사용자 이름 (마이페이지 링크) --%>
+                    <a href="/regist" class="navbar-text me-3" style="text-decoration: underline; color: inherit;">
+                        ${principal.attributes.oauthNickname}님
+                    </a>
+
+                    <%-- 알림 뱃지 --%>
+                    <a href="/notifications" class="btn btn-outline-dark me-3 position-relative">
+                        <i class="bi bi-bell"></i>
+                        <c:if test="${unreadCount > 0}">
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                ${unreadCount}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </c:if>
+                    </a>
+
+                    <%-- 햄버거 드롭다운 메뉴 --%>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="/my/bookmarks">북마크 보기</a></li>
+                            <li><a class="dropdown-item" href="/regist">내 정보 수정</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+                        </ul>
+                    </div>
+                </sec:authorize>
+
+                <%-- 2. 비로그인 상태일 때 --%>
+                <sec:authorize access="isAnonymous()">
+                    <a class="btn btn-outline-dark" href="/auth/login">
+                        로그인
+                    </a>
+                </sec:authorize>
 
             </div>
         </div>
     </nav>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

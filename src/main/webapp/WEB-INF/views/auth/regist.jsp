@@ -169,7 +169,6 @@
     document.addEventListener("click", function(e) {
         if (e.target.classList.contains("category-tag")) {
             e.target.classList.toggle("active");
-            updateCategoryInputs();
         }
     });
 
@@ -188,11 +187,14 @@
         });
     }
 
-    // 폼 제출 시 카테고리 선택 검증
+    // 폼 제출 시 카테고리 선택 검증 및 hidden input 최종 업데이트
     document.querySelector('form').addEventListener('submit', function(e) {
+        // 폼 제출 직전에, 현재 활성화된 카테고리를 기준으로 hidden input을 다시 생성합니다.
+        updateCategoryInputs();
+
         const selectedCategories = document.querySelectorAll('.category-tag.active');
-        if (selected Categories.length === 0) {
-            e.preventDefault();
+        if (selectedCategories.length === 0) {
+            e.preventDefault(); // 폼 제출 중단
             alert('관심 카테고리를 최소 1개 이상 선택해주세요.');
         }
     });

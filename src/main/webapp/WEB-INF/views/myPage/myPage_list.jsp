@@ -52,9 +52,6 @@
         <!-- 상단 메뉴 -->
         <div>
             <div class="sidebar-item active">내 프로필</div>
-            <div class="sidebar-item">내 관심사</div>
-            <div class="sidebar-item">좋아요 누른 게시물</div>
-            <div class="sidebar-item">1:1 문의</div>
             <div class="sidebar-item">북마크한 기사거리</div>
         </div>
 
@@ -66,17 +63,17 @@
     </div>
 
     <!-- ====================== 우측 컨텐츠 영역 ====================== -->
-    <div class="mypage-content flex-grow-1">
+<div class="mypage-content flex-grow-1">
 
-        <!-- 기본 첫 화면은 “내 프로필” -->
-        <h4 class="fw-bold mb-4">내 프로필</h4>
+    <!-- 기본 첫 화면은 “내 프로필” -->
+    <h4 class="fw-bold mb-4">내 프로필</h4>
 
-        <p class="text-muted">이곳에 내 프로필 정보가 출력될 예정입니다.</p>
+    <p class="text-muted">이곳에 내 프로필 정보가 출력될 예정입니다.</p>
 
-        <!-- 여기부터 동적으로 변경될 영역 -->
-        <!-- 추후: Ajax로 메뉴 전환 or JSP include 방식 적용 가능 -->
+    <!-- 여기부터 동적으로 변경될 영역 -->
+    <!-- 추후: Ajax로 메뉴 전환 or JSP include 방식 적용 가능 -->
 
-    </div>
+</div>
 
 </div>
 

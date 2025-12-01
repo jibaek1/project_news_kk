@@ -1,9 +1,9 @@
 package com.ssr.newskuku._global.errors.adminException;
 
 // 403 Forbidden 상황에서 사용할 커스텀 예외 클래스
-public class AdminException403 extends RuntimeException {
+public class Exception403 extends RuntimeException {
 
-    public AdminException403(String message) {
+    public Exception403(String message) {
         super(message);
     }
 

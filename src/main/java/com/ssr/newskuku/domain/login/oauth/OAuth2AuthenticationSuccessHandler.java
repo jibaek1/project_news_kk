@@ -3,6 +3,7 @@ package com.ssr.newskuku.domain.login.oauth;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             log.warn("Response already committed. Cannot redirect.");
             return;
         }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userId", oAuth2User.getAttribute("userId"));
+        session.setAttribute("oauthNickname", oAuth2User.getAttribute("oauthNickname"));
+        session.setAttribute("oauthGender", oAuth2User.getAttribute("oauthGender"));
 
         if (oAuth2User.getAttributes().containsKey("needsAdditionalInfo") &&
                 (boolean) oAuth2User.getAttributes().get("needsAdditionalInfo")) {
