@@ -25,12 +25,7 @@
                                 <img src="${news.thumbnail}" class="img-fluid rounded shadow-lg w-100" alt="${news.title}" style="object-fit: cover;">
                             </c:when>
                             <c:otherwise>
-                                <div class="bg-light rounded shadow-lg d-flex align-items-center justify-content-center" style="height: 500px;">
-                                    <div class="text-center text-muted">
-                                        <i class="bi bi-image" style="font-size: 5rem;"></i>
-                                        <p class="mt-3 fs-5">이미지가 없습니다</p>
-                                    </div>
-                                </div>
+                                <img src="${pageContext.request.contextPath}/img/news_default.png" class="img-fluid rounded shadow-lg w-100" alt="기본 이미지" style="object-fit: cover;">
                             </c:otherwise>
                         </c:choose>
                     </div>
