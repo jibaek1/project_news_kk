@@ -28,7 +28,7 @@ public class NewsParser {
         if (dateStr == null || dateStr.isBlank()) return null;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return LocalDateTime.parse(dateStr.trim(),formatter);
+        return LocalDateTime.parse(dateStr.trim(), formatter);
     }
 
     public boolean isYesterdayArticle(LocalDateTime publishedAt) {

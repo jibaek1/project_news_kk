@@ -2,7 +2,6 @@ package com.ssr.newskuku.domain.news.controller;
 
 import com.ssr.newskuku._global.common.PageLink;
 import com.ssr.newskuku._global.common.PageUtils;
-import com.ssr.newskuku.domain.news.News;
 import com.ssr.newskuku.domain.news.NewsService;
 import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import com.ssr.newskuku.domain.news.mapper.NewsMapper;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/news")
 public class NewsController {
     private final NewsService newsService;
     private final JobLauncher jobLauncher;
@@ -32,7 +30,7 @@ public class NewsController {
     private final UserBookMarkMapper userBookMarkMapper;
     private final NewsMapper newsMapper;
 
-    @GetMapping
+    @GetMapping("/news")
     public String list(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(required = false) String keyword,
@@ -70,14 +68,14 @@ public class NewsController {
 
 
     // 모든 카테고리 최신기사 크롤링 테스트
-    @GetMapping("/admin/crawl-all")
+    @GetMapping("/admin/news/crawl-all")
     public String crawlAllCategories() {
         newsService.crawlAllCategoriesLatestNews();
         return "모든 카테고리 크롤링 시작!";
     }
 
     // 상세보기
-    @GetMapping("/detail/{id}")
+    @GetMapping("/news/detail/{id}")
     public String detail(@PathVariable Long id, Model model, HttpSession session) {
         NewsResponse.FindById news = newsService.getNewsId(id);
         model.addAttribute("news", news);
@@ -97,7 +95,7 @@ public class NewsController {
     }
 
     // 북마크 토글
-    @PostMapping("/bookmark/{newsId}")
+    @PostMapping("/news/bookmark/{newsId}")
     @ResponseBody
     public Map<String, Object> toggleBookmark(@PathVariable Long newsId, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
