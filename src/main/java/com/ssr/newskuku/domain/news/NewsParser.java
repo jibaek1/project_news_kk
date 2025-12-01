@@ -28,7 +28,7 @@ public class NewsParser {
         if (dateStr == null || dateStr.isBlank()) return null;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return LocalDateTime.parse(dateStr.trim(),formatter);
+        return LocalDateTime.parse(dateStr.trim(), formatter);
     }
 
     public boolean isYesterdayArticle(LocalDateTime publishedAt) {
@@ -43,7 +43,7 @@ public class NewsParser {
     }
 
     public String getThumbnail(Document doc) {
-        return doc.select(".img-con01 img").attr("src");
+        return doc.select("img[data-pop-open=pop-photo]").attr("src");
     }
 
     public String getCategory(Document doc) {
