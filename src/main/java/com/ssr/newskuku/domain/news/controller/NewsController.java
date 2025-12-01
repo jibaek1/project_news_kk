@@ -38,22 +38,24 @@ public class NewsController {
     ) {
         int pageSize = 10;
 
-        if (page < 0) {
-            page = 0;
-        }
+        if (page < 0) page = 0;
 
         int offset = page * pageSize;
 
-        List<NewsResponse.FindAll> newsList;  // ✅ 타입 변경
+        List<NewsResponse.FindAll> newsList;
         int totalCount;
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            newsList = newsMapper.findByKeyword(keyword.trim(), offset, pageSize);
-            totalCount = newsMapper.countByKeyword(keyword.trim());
+            keyword = keyword.trim();
+            newsList = newsMapper.findByKeyword(keyword, offset, pageSize);
+            totalCount = newsMapper.countByKeyword(keyword);
         } else {
             newsList = newsMapper.findAll(offset, pageSize);
             totalCount = newsMapper.countAll();
         }
+
+        // 총 페이지수
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
         // PageUtils 사용
         List<PageLink> pageLinks = PageUtils.createPageLinks(page, pageSize, totalCount);
@@ -62,10 +64,10 @@ public class NewsController {
         model.addAttribute("pageLinks", pageLinks);
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPages", totalPages);
 
         return "news/list";
     }
-
 
     // 모든 카테고리 최신기사 크롤링 테스트
     @GetMapping("/admin/news/crawl-all")
