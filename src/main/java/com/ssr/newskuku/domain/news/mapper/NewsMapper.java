@@ -42,4 +42,8 @@ public interface NewsMapper {
 
     int countAll();
 
+    List<NewsResponse.FindAll> findByCriteria(@Param("category") String category, @Param("keyword") String keyword, @Param("offset") int offset, @Param("pageSize") int pageSize);
+
+    int countByCriteria(@Param("category") String category, @Param("keyword") String keyword);
+
 }

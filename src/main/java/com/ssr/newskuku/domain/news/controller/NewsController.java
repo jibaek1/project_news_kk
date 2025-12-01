@@ -36,6 +36,7 @@ public class NewsController {
     @GetMapping("/news")
     public String list(
             @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) String keyword,
             Model model
     ) {
@@ -45,29 +46,23 @@ public class NewsController {
 
         int offset = page * pageSize;
 
-        List<NewsResponse.FindAll> newsList;
-        int totalCount;
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            keyword = keyword.trim();
-            newsList = newsMapper.findByKeyword(keyword, offset, pageSize);
-            totalCount = newsMapper.countByKeyword(keyword);
-        } else {
-            newsList = newsMapper.findAll(offset, pageSize);
-            totalCount = newsMapper.countAll();
+        // "전체" 카테고리는 null로 처리하여 모든 카테고리를 검색하도록 함
+        if ("전체".equals(category)) {
+            category = null;
         }
 
-        // 총 페이지수
-        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+        List<NewsResponse.FindAll> newsList = newsMapper.findByCriteria(category, keyword, offset, pageSize);
+        int totalCount = newsMapper.countByCriteria(category, keyword);
 
-        // PageUtils 사용
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
         List<PageLink> pageLinks = PageUtils.createPageLinks(page, pageSize, totalCount);
 
         model.addAttribute("newsList", newsList);
         model.addAttribute("pageLinks", pageLinks);
         model.addAttribute("currentPage", page);
-        model.addAttribute("keyword", keyword);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentCategory", category); // 뷰에서 활성화된 카테고리 표시용
+        model.addAttribute("keyword", keyword);
 
         return "news/list";
     }
