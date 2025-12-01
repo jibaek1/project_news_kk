@@ -129,29 +129,40 @@
             <c:if test="${not empty pageLinks && fn:length(pageLinks) > 0}">
                 <nav aria-label="Page navigation" class="mt-4">
                     <ul class="pagination justify-content-center">
+
+                        <!-- 이전 페이지 -->
                         <c:if test="${currentPage > 0}">
                             <li class="page-item">
-                                <a class="page-link" href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">이전</a>
+                                <a class="page-link"
+                                   href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                    이전
+                                </a>
                             </li>
                         </c:if>
 
+                        <!-- Block pageLinks 출력 -->
                         <c:forEach items="${pageLinks}" var="link">
                             <li class="page-item ${link.current ? 'active' : ''}">
-                                <a class="page-link" href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                <a class="page-link"
+                                   href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
                                         ${link.number}
                                 </a>
                             </li>
                         </c:forEach>
 
-                        <c:if test="${currentPage < fn:length(pageLinks) - 1}">
+                        <!-- 다음 페이지 (길이가 아니라 총 페이지수 기준으로 체크) -->
+                        <c:if test="${currentPage < totalPages - 1}">
                             <li class="page-item">
-                                <a class="page-link" href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">다음</a>
+                                <a class="page-link"
+                                   href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                    다음
+                                </a>
                             </li>
                         </c:if>
+
                     </ul>
                 </nav>
             </c:if>
-
         </div>
     </div>
 </div>
