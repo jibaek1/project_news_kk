@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,4 +30,6 @@ public class News extends BaseEntity {
 
     // 뉴스 요약
     private String summary;
+
+    private List<NewsComment> comments;
 }

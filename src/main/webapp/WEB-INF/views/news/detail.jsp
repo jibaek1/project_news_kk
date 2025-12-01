@@ -87,12 +87,53 @@
                             </c:choose>
                         </div>
                     </div>
-
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle"></i>
                         이 기사는 AI가 자동으로 요약한 내용입니다.
                         정확한 내용은 원문을 확인해주세요.
                     </div>
+                    <!-- 댓글 영역 -->
+                    <section class="mt-5">
+                        <h3>댓글</h3>
+
+                        <!-- 댓글 등록 폼 -->
+                        <form action="${pageContext.request.contextPath}/news/${news.newsId}/comment" method="post" class="mb-4">
+                            <div class="mb-2">
+                                <textarea name="content" rows="3" class="form-control" placeholder="댓글을 입력하세요..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">등록</button>
+                        </form>
+
+                        <!-- 댓글 리스트 -->
+                        <c:if test="${not empty comments}">
+                            <div class="list-group">
+                                <c:forEach var="comment" items="${comments}">
+                                    <div class="list-group-item mb-2 shadow-sm rounded">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <b>${comment.writer}</b>
+                                                <span class="text-muted ms-2" style="font-size: 0.9rem;">
+                                                        ${comment.createdAt}
+                                                </span>
+                                            </div>
+                                            <!-- 본인 댓글 삭제 버튼 -->
+                                            <c:if test="${comment.userId == sessionScope.loginUser}">
+                                                <form action="${pageContext.request.contextPath}/news/${news.newsId}/comment/delete" method="post" style="margin:0;">
+                                                    <input type="hidden" name="commentId" value="${comment.id}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
+                                                </form>
+                                            </c:if>
+                                        </div>
+                                        <p class="mt-2 mb-0" style="white-space: pre-line;">${comment.content}</p>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:if>
+                        <c:if test="${empty comments}">
+                            <p class="text-muted">등록된 댓글이 없습니다.</p>
+                        </c:if>
+                    </section>
+
                 </div>
             </div>
         </div>

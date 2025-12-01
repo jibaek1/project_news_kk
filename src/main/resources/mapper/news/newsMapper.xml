@@ -5,6 +5,28 @@
 
 <mapper namespace="com.ssr.newskuku.domain.news.mapper.NewsMapper">
 
+    <!-- News와 댓글 연관관계 정의 -->
+    <resultMap id="NewsWithComments" type="com.ssr.newskuku.domain.news.News">
+        <id property="newsId" column="news_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="summary" column="summary"/>
+        <result property="url" column="url"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="category" column="category"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="modifiedAt" column="modified_at"/>
+        <result property="viewCount" column="view_count"/>
+
+        <collection property="comments" ofType="com.ssr.newskuku.domain.news.NewsComment">
+            <id property="id" column="comment_id"/>
+            <result property="newsId" column="news_id"/>
+            <result property="writer" column="writer"/>
+            <result property="content" column="comment_content"/>
+            <result property="createdAt" column="comment_created_at"/>
+        </collection>
+    </resultMap>
+
     <!-- 전체 조회 -->
     <select id="findAll" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">
         SELECT
@@ -23,7 +45,6 @@
             LIMIT #{limit} OFFSET #{offset}
     </select>
 
-
     <!-- summary가 null인 뉴스 조회 -->
     <select id="findNewsWithoutSummary" resultType="com.ssr.newskuku.domain.news.News">
         SELECT
@@ -41,7 +62,29 @@
         ORDER BY news_id ASC
     </select>
 
-    <!-- 상세 조회 -->
+    <!-- 댓글 포함 상세 조회 -->
+    <select id="findByIdWithComments" resultMap="NewsWithComments" parameterType="long">
+        SELECT
+            n.news_id,
+            n.title,
+            n.content,
+            n.summary,
+            n.url,
+            n.thumbnail,
+            n.category,
+            n.view_count,
+            n.created_at,
+            n.modified_at,
+            c.id as comment_id,
+            c.news_id,
+            c.writer,
+            c.content as comment_content,
+            c.created_at as comment_created_at
+        FROM news n
+                 LEFT JOIN news_comment c ON n.news_id = c.news_id
+        WHERE n.news_id = #{id}
+    </select>
+    <!-- 기존 상세 조회 -->
     <select id="findById" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindById">
         SELECT
             news_id as newsId,
