@@ -5,6 +5,7 @@ import com.ssr.newskuku.domain.news.mapper.NewsMapper;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -43,7 +44,7 @@ public class NewsService {
     // 뉴스 카테고리별 처리 크롤링 처리
     public void crawlAllCategoriesLatestNews() {
 
-        int maxPage = 20;
+        int maxPage = 15;
         int totalSaved = 0;
 
         for (String categoryUrl : categoryUrls) {
@@ -67,8 +68,11 @@ public class NewsService {
 
             try {
                 Document doc = crawler.getDocument(categoryUrl + "/" + page);
-                for (Element item : doc.select("div.news-con")) {
 
+                Elements items = doc.select("div.news-con");
+                System.out.println("페이지 " + page + " / 리스트 item 개수: " + items.size());
+
+                for (Element item : items) {
                     String link = parser.getLink(item);
                     if (link.isBlank()) continue;
 
@@ -85,6 +89,9 @@ public class NewsService {
                     LocalDateTime realPublishedAt = parser.getPublishedAt(detail);
 
                     boolean isYesterday = parser.isYesterdayArticle(realPublishedAt);
+                    if (!isYesterday) {
+                        System.out.println("전날 판정 실패 → 링크: " + link + " / 날짜: " + realPublishedAt);
+                    }
 
                     // 어제 기사만 저장
                     if (isYesterday) {
