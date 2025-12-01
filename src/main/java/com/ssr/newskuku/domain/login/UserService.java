@@ -242,4 +242,12 @@ public class UserService {
     public int getUserCountByProvider(Provider provider) {
         return userAccountMapper.countByProvider(provider);
     }
+
+    public UserInfo getUserInfo(Long userId) {
+        UserInfo info = userInfoMapper.findByUserId(userId);
+        if (info == null) {
+            throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
+        }
+        return info;
+    }
 }

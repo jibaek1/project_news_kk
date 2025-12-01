@@ -2,13 +2,15 @@ package com.ssr.newskuku.domain.news.controller;
 
 import com.ssr.newskuku._global.common.PageLink;
 import com.ssr.newskuku._global.common.PageUtils;
+import com.ssr.newskuku.domain.login.UserInfo;
+import com.ssr.newskuku.domain.news.NewsCommentService;
 import com.ssr.newskuku.domain.news.NewsService;
+import com.ssr.newskuku.domain.news.dto.NewsCommentDTO;
 import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import com.ssr.newskuku.domain.news.mapper.NewsMapper;
 import com.ssr.newskuku.domain.userbookmark.UserBookMark;
 import com.ssr.newskuku.domain.userbookmark.UserBookMarkService;
 import com.ssr.newskuku.domain.userbookmark.mapper.UserBookMarkMapper;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -29,6 +31,7 @@ public class NewsController {
     private final UserBookMarkService userBookMarkService;
     private final UserBookMarkMapper userBookMarkMapper;
     private final NewsMapper newsMapper;
+    private final NewsCommentService newsCommentService;
 
     @GetMapping("/news")
     public String list(
@@ -78,19 +81,21 @@ public class NewsController {
 
     // 상세보기
     @GetMapping("/news/detail/{id}")
-    public String detail(@PathVariable Long id, Model model, HttpSession session) {
+    public String detail(@PathVariable Long id, Model model,
+                         @SessionAttribute(name = "loginUser", required = false) UserInfo loginUser) {
         NewsResponse.FindById news = newsService.getNewsId(id);
         model.addAttribute("news", news);
 
-        // 북마크 상태 확인 - 매퍼 직접 사용
-        Long userInfoId = (Long) session.getAttribute("userInfoId");
-        boolean isBookmarked = false;
+        // 댓글 목록 추가
+        List<NewsCommentDTO> comments = newsCommentService.getCommentsByNewsId(id);
+        model.addAttribute("comments", comments);
 
-        if (userInfoId != null) {
-            UserBookMark bookmark = userBookMarkMapper.findByUserAndNews(userInfoId, id);
+        // 북마크 상태 확인
+        boolean isBookmarked = false;
+        if (loginUser != null) {
+            UserBookMark bookmark = userBookMarkMapper.findByUserAndNews(loginUser.getUserInfoId(), id);
             isBookmarked = (bookmark != null);
         }
-
         model.addAttribute("isBookmarked", isBookmarked);
 
         return "news/detail";
@@ -99,18 +104,17 @@ public class NewsController {
     // 북마크 토글
     @PostMapping("/news/bookmark/{newsId}")
     @ResponseBody
-    public Map<String, Object> toggleBookmark(@PathVariable Long newsId, HttpSession session) {
+    public Map<String, Object> toggleBookmark(@PathVariable Long newsId,
+                                              @SessionAttribute(name = "loginUser", required = false) UserInfo loginUser) {
         Map<String, Object> response = new HashMap<>();
 
-        Long userInfoId = (Long) session.getAttribute("userInfoId");
-
-        if (userInfoId == null) {
+        if (loginUser == null) {
             response.put("success", false);
             response.put("message", "로그인이 필요합니다.");
             return response;
         }
 
-        boolean bookmarked = userBookMarkService.toggle(userInfoId, newsId);
+        boolean bookmarked = userBookMarkService.toggle(loginUser.getUserInfoId(), newsId);
 
         response.put("success", true);
         response.put("bookmarked", bookmarked);

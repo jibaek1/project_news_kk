@@ -335,3 +335,27 @@ VALUES
 --INSERT INTO notification (user_info_id, message, is_read, created_at)
 --VALUES (5, '새로운 댓글이 달렸습니다.', 'COMMENT', 0, CURRENT_TIMESTAMP),
 --       (5, '내 게시물이 좋아요 10개를 넘었습니다!', 0, CURRENT_TIMESTAMP);
+
+
+-- 기존 테이블 삭제
+DROP TABLE IF EXISTS news_comment;
+
+-- 뉴스 댓글 테이블 생성
+CREATE TABLE news_comment (
+                              comment_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '댓글 ID',
+                              news_id BIGINT NOT NULL COMMENT '뉴스 ID (FK)',
+                              user_id BIGINT NOT NULL COMMENT '작성자 ID (FK, user_info 기준)',
+                              content VARCHAR(500) NOT NULL COMMENT '댓글 내용',
+                              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
+                              updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+
+                              FOREIGN KEY (news_id) REFERENCES news(news_id) ON DELETE CASCADE,
+                              FOREIGN KEY (user_id) REFERENCES user_info(user_info_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='뉴스 댓글 테이블';
+
+-- 샘플 댓글 데이터 삽입
+INSERT INTO news_comment (news_id, user_id, content)
+VALUES
+    (1, 1, '첫 번째 뉴스에 대한 첫 댓글입니다.'),
+    (1, 2, '좋은 기사 감사합니다!'),
+    (2, 1, '두 번째 뉴스 내용도 흥미롭네요.');

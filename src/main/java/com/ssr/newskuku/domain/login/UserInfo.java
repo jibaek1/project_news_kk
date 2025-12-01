@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Alias("user_info")
-public class UserInfo extends BaseEntity {
+public class UserInfo extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long userInfoId;
     private Long userId;
