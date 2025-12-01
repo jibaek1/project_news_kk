@@ -1,7 +1,10 @@
 package com.ssr.newskuku.domain.login.controller;
 
+import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.login.UserService;
 import com.ssr.newskuku.domain.login.dto.UserRequest;
+import com.ssr.newskuku.domain.login.dto.UserResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -78,11 +81,14 @@ public class LoginController {
      */
     @PostMapping("regist")
     public String saveAdditionalInfo(@RequestParam Long userId,
-                                     @ModelAttribute UserRequest.AdditionalInfo request) {
+                                     @ModelAttribute UserRequest.AdditionalInfo request,
+                                     HttpSession session) {
         log.info("추가 정보 저장: userId={}, request={}", userId, request);
 
         userService.updateAdditionalInfo(userId, request);
 
+        UserInfo info = userService.getUserInfo(userId);
+        session.setAttribute("loginUser", info);
         return "redirect:/";
     }
 }

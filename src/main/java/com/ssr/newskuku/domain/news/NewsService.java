@@ -52,9 +52,9 @@ public class NewsService {
         }
 
         System.out.println("총 " + totalSaved + "개 기사 저장");
-        // System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
+         System.out.println("\n자동으로 AI 요약을 시작합니다...\n");
 
-        // generateSummariesWithBatch();
+         generateSummariesWithBatch();
     }
 
     // crawlCategory 메서드 수정: 저장한 개수 반환

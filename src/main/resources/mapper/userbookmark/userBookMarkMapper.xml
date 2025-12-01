@@ -17,7 +17,7 @@
         n.category
         FROM user_bookmark b
         JOIN news n ON b.news_id = n.news_id
-        WHERE b.user_id = #{userId}
+        WHERE b.user_id = #{userInfoId}
         ORDER BY b.bookmark_id DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
@@ -29,18 +29,18 @@
         news_id AS newsId,
         created_at AS createdAt
         FROM user_bookmark
-        WHERE user_id = #{userId} AND news_id = #{newsId}
+        WHERE user_id = #{userInfoId} AND news_id = #{newsId}
     </select>
 
     <!--    북마크 생성 -->
     <select id="insertBookMark">
         INSERT INTO user_bookmark (user_id, news_id)
-        VALUES (#{userId}, #{newsId});
+        VALUES (#{userInfoId}, #{newsId});
     </select>
     <!--  북마크 삭제 -->
     <select id="deleteBookMark">
         DELETE FROM user_bookmark
-        WHERE user_id = #{userId} AND news_id = #{newsId};
+        WHERE user_id = #{userInfoId} AND news_id = #{newsId};
     </select>
 
 </mapper>

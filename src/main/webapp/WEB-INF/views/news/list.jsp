@@ -64,15 +64,6 @@
                 <div class="filter-option">IT</div>
             </div>
 
-            <!-- 2. 나이대별 관심사 -->
-            <div class="filter-row d-flex align-items-center flex-wrap">
-                <div class="filter-label">나이대별 관심사 |</div>
-                <div class="filter-option active">전체</div>
-                <div class="filter-option">20대</div>
-                <div class="filter-option">30대</div>
-                <div class="filter-option">40대</div>
-                <div class="filter-option">50대 이상</div>
-            </div>
 
             <!-- 3. 검색바 -->
             <div class="search-bar mb-4">
@@ -94,14 +85,15 @@
             <div class="article-list">
                 <c:choose>
                     <c:when test="${not empty newsList}">
+                        <c:url value="/img/news_default.png" var="defaultImageUrl" />
                         <c:forEach var="news" items="${newsList}">
                             <div class="article-item d-flex mb-4 border-bottom pb-3"
                                  onclick="location.href='/news/detail/${news.newsId}'"
                                  style="cursor: pointer;">
 
                                 <!-- 썸네일 -->
-                                <img src="${empty news.thumbnail ? 'https://dummyimage.com/150x100/ced4da/6c757d' : news.thumbnail}"
-                                     class="rounded me-3" alt="thumbnail" width="150" height="100">
+                                <img src="${empty news.thumbnail ? defaultImageUrl : news.thumbnail}"
+                                     class="rounded me-3" alt="thumbnail" width="150" height="100" style="object-fit: cover;">
 
                                 <!-- 텍스트 영역 -->
                                 <div>
@@ -129,29 +121,40 @@
             <c:if test="${not empty pageLinks && fn:length(pageLinks) > 0}">
                 <nav aria-label="Page navigation" class="mt-4">
                     <ul class="pagination justify-content-center">
+
+                        <!-- 이전 페이지 -->
                         <c:if test="${currentPage > 0}">
                             <li class="page-item">
-                                <a class="page-link" href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">이전</a>
+                                <a class="page-link"
+                                   href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                    이전
+                                </a>
                             </li>
                         </c:if>
 
+                        <!-- Block pageLinks 출력 -->
                         <c:forEach items="${pageLinks}" var="link">
                             <li class="page-item ${link.current ? 'active' : ''}">
-                                <a class="page-link" href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                <a class="page-link"
+                                   href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
                                         ${link.number}
                                 </a>
                             </li>
                         </c:forEach>
 
-                        <c:if test="${currentPage < fn:length(pageLinks) - 1}">
+                        <!-- 다음 페이지 (길이가 아니라 총 페이지수 기준으로 체크) -->
+                        <c:if test="${currentPage < totalPages - 1}">
                             <li class="page-item">
-                                <a class="page-link" href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">다음</a>
+                                <a class="page-link"
+                                   href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                    다음
+                                </a>
                             </li>
                         </c:if>
+
                     </ul>
                 </nav>
             </c:if>
-
         </div>
     </div>
 </div>
