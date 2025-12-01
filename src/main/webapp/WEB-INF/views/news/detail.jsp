@@ -111,17 +111,14 @@
                                     <div class="list-group-item mb-2 shadow-sm rounded">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div>
-                                                <b>${comment.writer}</b>
+                                                <b>${comment.userName}</b>
                                                 <span class="text-muted ms-2" style="font-size: 0.9rem;">
                                                         ${comment.createdAt}
                                                 </span>
                                             </div>
                                             <!-- 본인 댓글 삭제 버튼 -->
-                                            <c:if test="${comment.userId == sessionScope.loginUser}">
-                                                <form action="${pageContext.request.contextPath}/news/${news.newsId}/comment/delete" method="post" style="margin:0;">
-                                                    <input type="hidden" name="commentId" value="${comment.id}">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
-                                                </form>
+                                            <c:if test="${sessionScope.loginUser != null && comment.userId == sessionScope.loginUser.userId}">
+                                                <a href="${pageContext.request.contextPath}/news/delete/${comment.id}/${news.newsId}" class="btn btn-sm btn-outline-danger">삭제</a>
                                             </c:if>
                                         </div>
                                         <p class="mt-2 mb-0" style="white-space: pre-line;">${comment.content}</p>
@@ -157,6 +154,10 @@
             .then(data => {
                 if (data.success === false) {
                     alert(data.message || '북마크 처리 중 오류가 발생했습니다.');
+                    // 로그인이 필요하면 로그인 페이지로 보낼 수도 있습니다.
+                    if (data.message === '로그인이 필요합니다.') {
+                        window.location.href = '/auth/login';
+                    }
                     return;
                 }
 

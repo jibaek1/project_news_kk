@@ -41,20 +41,20 @@ public class NewsCommentController {
         comment.setContent(content);
 
         service.addComment(comment);
-        return "redirect:/news/" + newsId;
+        return "redirect:/news/detail/" + newsId;
     }
 
     // 댓글 수정
     @PostMapping("/update")
     public String update(NewsCommentDTO comment) {
         service.updateComment(comment);
-        return "redirect:/news/" + comment.getNewsId();
+        return "redirect:/news/detail/" + comment.getNewsId();
     }
 
     // 댓글 삭제
     @GetMapping("/delete/{id}/{newsId}")
     public String delete(@PathVariable Long id, @PathVariable Long newsId) {
         service.deleteComment(id);
-        return "redirect:/news/" + newsId;
+        return "redirect:/news/detail/" + newsId;
     }
 }
