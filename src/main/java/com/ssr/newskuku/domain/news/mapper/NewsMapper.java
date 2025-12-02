@@ -46,4 +46,6 @@ public interface NewsMapper {
 
     int countByCriteria(@Param("category") String category, @Param("keyword") String keyword);
 
+    void updateViewCount(Long id);
+
 }
