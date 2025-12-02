@@ -6,7 +6,7 @@
 <mapper namespace="com.ssr.newskuku.domain.notice.mapper.NoticeMapper">
 
     <!-- 전체 조회 -->
-    <select id="findAll" resultType="NoticeResponse">
+    <select id="findAll" resultType="com.ssr.newskuku.domain.notice.dto.NoticeResponse$List">
         SELECT notice_id,
         title,
         content,
@@ -16,6 +16,43 @@
         updated_at
         FROM notice
         ORDER BY notice_id DESC;
+    </select>
+
+    <!--  상세 조회  -->
+    <select id="findById"
+            parameterType="long"
+            resultType="com.ssr.newskuku.domain.notice.dto.NoticeResponse$Detail">
+
+        SELECT notice_id      AS noticeId,
+        title,
+        content,
+        view_count     AS viewCount,
+        is_visible     AS isVisible,
+        created_at     AS createdAt,
+        modified_at    AS modifiedAt
+        FROM notice
+        WHERE notice_id = #{id};
+    </select>
+
+    <!--  페이지 네이션 조회 -->
+    <select id="findPage"
+            parameterType="map"
+            resultType="com.ssr.newskuku.domain.notice.dto.NoticeResponse$List">
+        SELECT notice_id AS noticeId,
+        title,
+        content,
+        view_count AS viewCount,
+        is_visible AS isVisible,
+        created_at AS createdAt,
+        modified_at AS modifiedAt
+        FROM notice
+        ORDER BY notice_id DESC
+        LIMIT #{size} OFFSET #{offset};
+    </select>
+
+    <!--  전체 데이터 갯수 조회  -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*) FROM notice;
     </select>
 
 </mapper>

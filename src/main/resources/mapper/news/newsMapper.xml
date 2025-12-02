@@ -95,8 +95,8 @@
             thumbnail,
             category,
             view_count as viewCount,
-            date_format(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
-            date_format(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
+            DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as createdAt,
+            DATE_FORMAT(modified_at, '%Y-%m-%d %H:%i') as modifiedAt
         FROM news
         WHERE news_id = #{id}
     </select>
@@ -150,6 +150,44 @@
     <select id="countAll" resultType="int">
         SELECT COUNT(*)
         FROM news
+    </select>
+
+    <select id="findByCriteria" resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">
+        SELECT
+        news_id as newsId,
+        title,
+        content,
+        summary,
+        url,
+        thumbnail,
+        category,
+        created_at as createdAt,
+        modified_at as modifiedAt,
+        view_count as viewCount
+        FROM news
+        <where>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY news_id DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="countByCriteria" resultType="int">
+        SELECT COUNT(*)
+        FROM news
+        <where>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
     </select>
 
 </mapper>
