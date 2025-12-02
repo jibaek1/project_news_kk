@@ -11,22 +11,22 @@ import java.util.List;
 public interface UserBookMarkMapper {
 
         // 존재 확인
-        UserBookMark findByUserAndNews(@Param("userInfoId") Long userInfoId,
+        UserBookMark findByUserAndNews(@Param("userId") Long userId,
                                        @Param("newsId") Long newsId);
 
         // 생성
-        void insertBookMark(@Param("userInfoId") Long userInfoId,
+        void insertBookMark(@Param("userId") Long userId,
                             @Param("newsId") Long newsId);
 
         // 삭제
-        void deleteBookMark(@Param("userInfoId") Long userInfoId,
+        void deleteBookMark(@Param("userId") Long userId,
                             @Param("newsId") Long newsId);
 
         // 전체 조회
-        List<UserBookMarkResponse.FindAll> findAll(@Param("userInfoId") Long userInfoId,
+        List<UserBookMarkResponse.FindAll> findAll(@Param("userId") Long userId,
                                                         @Param("size") int size,
                                                         @Param("offset") int offset);
 
-    int countByUser(@Param("userInfoId") Long userInfoId);
+    int countByUser(@Param("userId") Long userId);
 
 }
