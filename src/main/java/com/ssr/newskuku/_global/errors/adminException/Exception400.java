@@ -2,10 +2,10 @@ package com.ssr.newskuku._global.errors.adminException;
 
 // 400 Bad Request 상황에서 사용할 커스텀 예외 클래스
 // RuntimeException 상속하여 처리
-public class AdminException400 extends RuntimeException {
+public class Exception400 extends RuntimeException {
 
     // 에러 메세지로 사용할 문자열을 super 클래스에게 전달
-    public AdminException400(String message) {
+    public Exception400(String message) {
         super(message);
     }
 

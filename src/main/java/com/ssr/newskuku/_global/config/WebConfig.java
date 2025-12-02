@@ -1,6 +1,6 @@
 package com.ssr.newskuku._global.config;
 
-import com.ssr.newskuku._global.config.session.AdminLoginInterceptor;
+import com.ssr.newskuku._global.config.session.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,11 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AdminLoginInterceptor adminLoginInterceptor;
+    private final LoginInterceptor loginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminLoginInterceptor)
+        registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/admin/**");
     }
 

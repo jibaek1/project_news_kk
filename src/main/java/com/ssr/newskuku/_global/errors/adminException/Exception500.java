@@ -1,9 +1,9 @@
 package com.ssr.newskuku._global.errors.adminException;
 
 // 500  Internal Server Error 상황에서 사용할 커스텀 예외 클래스
-public class AdminException500 extends RuntimeException {
+public class Exception500 extends RuntimeException {
 
-    public AdminException500(String message) {
+    public Exception500(String message) {
         super(message);
     }
 

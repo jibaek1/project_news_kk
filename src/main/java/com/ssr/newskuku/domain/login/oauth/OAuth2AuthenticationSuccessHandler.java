@@ -33,14 +33,22 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // 세션에 로그인 사용자 정보 저장
         UserInfo loginUser = userService.getUserInfo(userId);
-        HttpSession session = request.getSession();
-        session.setAttribute("loginUser", loginUser);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            session = request.getSession(true);
+            session.setAttribute("loginUser", loginUser);
+        }
+
 
 
         if (response.isCommitted()) {
             log.warn("Response already committed. Cannot redirect.");
             return;
         }
+
+        session.setAttribute("userId", oAuth2User.getAttribute("userId"));
+        session.setAttribute("oauthNickname", oAuth2User.getAttribute("oauthNickname"));
+        session.setAttribute("oauthGender", oAuth2User.getAttribute("oauthGender"));
 
         if (oAuth2User.getAttributes().containsKey("needsAdditionalInfo") &&
                 (boolean) oAuth2User.getAttributes().get("needsAdditionalInfo")) {
