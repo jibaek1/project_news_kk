@@ -1,4 +1,21 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS notice;
+DROP TABLE IF EXISTS user_category;
+DROP TABLE IF EXISTS user_info;
+DROP TABLE IF EXISTS user_account;
+DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS user_bookmark;
+DROP TABLE IF EXISTS news_community;
+DROP TABLE IF EXISTS admin_info;
+DROP TABLE IF EXISTS admin_menu_info;
+DROP TABLE IF EXISTS sms_send_list;
+DROP TABLE IF EXISTS sms_send_history;
+DROP TABLE IF EXISTS news_category;
+DROP TABLE IF EXISTS news_summary;
+DROP TABLE IF EXISTS menu_info;
+DROP TABLE IF EXISTS news_comment;
+
 CREATE TABLE notice (
     notice_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -13,7 +30,6 @@ INSERT INTO notice(title, content)
 VALUES ('첫 공지', '환영합니다!');
 
 
-DROP TABLE IF EXISTS user_account;
 CREATE TABLE user_account (
     user_id BIGINT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
@@ -44,7 +60,6 @@ VALUES
      CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS user_category;
 CREATE TABLE user_category (
     user_category_id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
@@ -55,7 +70,6 @@ CREATE TABLE user_category (
 );
 
 
-DROP TABLE IF EXISTS user_info;
 CREATE TABLE user_info (
     user_info_id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
@@ -75,7 +89,6 @@ VALUES
     (1, 'https://cdn.example.com/user1.png', '1995-04-21', 'MALE', '개발자황', CURRENT_TIMESTAMP),
     (2, NULL, '1999-12-05', 'FEMALE', '코딩요정', CURRENT_TIMESTAMP);
 
-DROP TABLE IF EXISTS news;
 CREATE TABLE news (
     news_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '뉴스 PK',
     title VARCHAR(500) NOT NULL COMMENT '뉴스 제목',
@@ -94,11 +107,10 @@ CREATE TABLE news (
 
 INSERT INTO news (title, content, url, category, thumbnail, is_write, published_at, view_count)
 VALUES
-('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '정치', NULL, 0, '11-21 10:23', 0),
+('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '마켓+', NULL, 0, '11-21 10:23', 0),
 ('두 번째 뉴스 제목', '두 번째 뉴스 본문 내용입니다.', 'https://news.example.com/2', '정치', NULL, 0, '11-21 11:01', 0),
 ('세 번째 뉴스 제목', '세 번째 뉴스 본문 내용입니다.', 'https://news.example.com/3', '정치', NULL, 0, '11-21 08:55', 0);
 
-DROP TABLE IF EXISTS user_bookmark;
 CREATE TABLE user_bookmark (
     bookmark_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '북마크 ID (PK)',
     user_id BIGINT NOT NULL COMMENT '사용자 ID (FK)',
@@ -117,7 +129,6 @@ VALUES
     (2, 2, CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS news_community;
 CREATE TABLE news_community (
     community_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '게시글 ID (PK)',
     user_id BIGINT NOT NULL COMMENT '유저 ID (FK)',
@@ -139,7 +150,6 @@ VALUES
     (2, 'AI 뉴스 요약', '오늘의 AI 관련 뉴스 요약입니다.', 'AI', 'https://cdn.example.com/news1.png', 10, CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS admin_info;
 CREATE TABLE admin_info (
     admin_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '관리자 ID (PK)',
     admin_name VARCHAR(255) NULL COMMENT '관리자명',
@@ -157,7 +167,6 @@ VALUES
     ('운영자A', 'manager@example.com', 'https://cdn.example.com/profileA.png', '$2a$10$HASHEDPWD...', CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS admin_menu_info;
 CREATE TABLE admin_menu_info (
     id BIGINT NOT NULL AUTO_INCREMENT COMMENT '메뉴 고유 ID (PK)',
     menu_name VARCHAR(100) NULL COMMENT '메뉴명',
@@ -182,35 +191,6 @@ VALUES
     ('대시보드', 'DASHBOARD', NULL, 1, '/admin/dashboard', 'dashboard', 1, '관리자 홈 화면', CURRENT_TIMESTAMP),
     ('사용자 관리', 'USER_MANAGE', NULL, 2, '/admin/users', 'users', 1, '회원 관리 메뉴', CURRENT_TIMESTAMP);
 
-
--- 기존 테이블 삭제
-DROP TABLE IF EXISTS notice;
-
--- 테이블 생성
-CREATE TABLE notice (
-    notice_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '공지사항 고유 ID (PK)',
-    title VARCHAR(50) NOT NULL COMMENT '공지 제목',
-    content TEXT NOT NULL COMMENT '공지 내용',
-    author_id BIGINT NOT NULL COMMENT '작성자 ID (FK)',
-    view_count INT NOT NULL DEFAULT 0 COMMENT '조회수',
-    is_pinned TINYINT(1) NOT NULL DEFAULT 0 COMMENT '상단 고정 여부 (1=고정,0=일반)',
-    is_visible TINYINT(1) NOT NULL DEFAULT 1 COMMENT '공개 여부 (1=공개,0=숨김)',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '작성 일시',
-    modified_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
-    deleted_at TIMESTAMP NULL COMMENT '삭제(숨김) 일시',
-
-    PRIMARY KEY (notice_id),
-    FOREIGN KEY (author_id) REFERENCES admin_info(admin_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO notice
-(title, content, author_id, view_count, is_pinned, is_visible, created_at)
-VALUES
-    ('시스템 점검 안내', '이번 주 일요일 새벽 2시에 시스템 점검이 예정되어 있습니다.', 1, 0, 1, 1, CURRENT_TIMESTAMP),
-    ('신규 기능 출시', '새로운 AI 분석 기능이 추가되었습니다. 많은 이용 바랍니다.', 2, 10, 0, 1, CURRENT_TIMESTAMP);
-
-
-DROP TABLE IF EXISTS sms_send_list;
 CREATE TABLE sms_send_list (
     send_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '발송 아이디 (PK)',
     user_id BIGINT NOT NULL COMMENT '수신 회원 아이디 (FK)',
@@ -234,7 +214,6 @@ VALUES
     (2, '비밀번호_재설정', '비밀번호 재설정 링크가 발송되었습니다.', 0, CURRENT_TIMESTAMP, '관리자B', CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS sms_send_history;
 CREATE TABLE sms_send_history (
     send_his_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '발송 이력 아이디 (PK)',
     send_id BIGINT NOT NULL COMMENT '발송 아이디 (FK)',
@@ -260,7 +239,6 @@ VALUES
     (2, 2, '비밀번호_재설정', '비밀번호 재설정 안내 메시지.', 1, CURRENT_TIMESTAMP, '관리자B', CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS news_category;
 CREATE TABLE news_category (
     category_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '카테고리 ID (PK)',
     category_name VARCHAR(100) NOT NULL COMMENT '카테고리 이름',
@@ -274,7 +252,6 @@ VALUES
     ('정책/사회');
 
 
-DROP TABLE IF EXISTS news_summary;
 CREATE TABLE news_summary (
     summary_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '요약문 PK',
     news_id BIGINT NOT NULL COMMENT '원본 뉴스 PK (FK, UNIQUE)',
@@ -298,7 +275,6 @@ VALUES
     (2, '정부 정책 변경 사항을 정리한 내용입니다.', 2, CURRENT_TIMESTAMP);
 
 
-DROP TABLE IF EXISTS menu_info;
 CREATE TABLE menu_info (
     id BIGINT NOT NULL AUTO_INCREMENT COMMENT '고유 ID (PK)',
     menu_name VARCHAR(255) NULL COMMENT '메뉴명',
@@ -321,26 +297,6 @@ VALUES
     ('홈', 'HOME', NULL, 1, '/home', 1, '메인 페이지', CURRENT_TIMESTAMP),
     ('내 정보', 'PROFILE', NULL, 2, '/profile', 1, '사용자 프로필 페이지', CURRENT_TIMESTAMP);
 
---DROP TABLE IF EXISTS notification;
---CREATE TABLE notification (
---    notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---    user_info_id BIGINT NOT NULL,
---    message VARCHAR(255) NOT NULL,
---    is_read TINYINT DEFAULT 0,
---    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
---     PRIMARY KEY (id),
---     FOREIGN KEY (user_info_id) REFERENCES user_info(user_info_id)
---) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;;
---
---INSERT INTO notification (user_info_id, message, is_read, created_at)
---VALUES (5, '새로운 댓글이 달렸습니다.', 'COMMENT', 0, CURRENT_TIMESTAMP),
---       (5, '내 게시물이 좋아요 10개를 넘었습니다!', 0, CURRENT_TIMESTAMP);
-
-
--- 기존 테이블 삭제
-DROP TABLE IF EXISTS news_comment;
-
--- 뉴스 댓글 테이블 생성
 CREATE TABLE news_comment (
                               comment_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '댓글 ID',
                               news_id BIGINT NOT NULL COMMENT '뉴스 ID (FK)',
@@ -353,9 +309,10 @@ CREATE TABLE news_comment (
                               FOREIGN KEY (user_id) REFERENCES user_info(user_info_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='뉴스 댓글 테이블';
 
--- 샘플 댓글 데이터 삽입
 INSERT INTO news_comment (news_id, user_id, content)
 VALUES
     (1, 1, '첫 번째 뉴스에 대한 첫 댓글입니다.'),
     (1, 2, '좋은 기사 감사합니다!'),
     (2, 1, '두 번째 뉴스 내용도 흥미롭네요.');
+
+SET FOREIGN_KEY_CHECKS = 1;
