@@ -118,4 +118,8 @@
 
     <%@ include file="/WEB-INF/layout/footer.jsp" %>
 
+     <!-- 🔥 햄버거 버튼 작동을 위한 Bootstrap JS (추가됨) -->
+        <!-- 변경됨: 반드시 body 끝부분에 위치해야 collapse 정상 작동 -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </div>

@@ -43,4 +43,10 @@
         WHERE user_id = #{userInfoId} AND news_id = #{newsId};
     </select>
 
+    <select id="countByUser" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM user_bookmark
+        WHERE user_info_id = #{userInfoId}
+    </select>
+
 </mapper>
