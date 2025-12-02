@@ -24,33 +24,33 @@ public class UserBookMarkController {
     @PostMapping("/toggle")
     @ResponseBody
     public boolean toggle(@RequestParam Long newsId,
-                          @RequestParam Long userInfoId, HttpSession session) {
+                          @RequestParam Long userId, HttpSession session) {
 
         Long sessionUserId = (Long) session.getAttribute(Define.SESSION_USER);
         if (sessionUserId == null) {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
 
-        return userBookMarkService.toggle(userInfoId, newsId);
+        return userBookMarkService.toggle(userId, newsId);
     }
 
     @GetMapping("/findAllBookMark")
-    public String getFindAllList(@RequestParam Long userInfoId,
+    public String getFindAllList(@RequestParam Long userId,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size,
                                  Model model) {
 
         List<UserBookMarkResponse.FindAll> list =
-                userBookMarkService.findAllBookMark(userInfoId, page, size);
+                userBookMarkService.findAllBookMark(userId, page, size);
 
-        int total = userBookMarkService.count(userInfoId);
+        int total = userBookMarkService.count(userId);
         List<PageLink> pageLinks = PageUtils.createPageLinks(page, size, total);
 
         model.addAttribute("list", list);
         model.addAttribute("pageLinks", pageLinks);
         model.addAttribute("currentPage", page);
 
-        return "bookmark/bookmarkList"; // JSP 경로
+        return "bookmarkList/bookmarkList"; // JSP 경로
     }
 }
 

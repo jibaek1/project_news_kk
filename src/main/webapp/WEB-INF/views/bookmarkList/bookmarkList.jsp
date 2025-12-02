@@ -71,12 +71,12 @@
             </div>
 
             <div class="bookmark-meta mt-2">
-                카테고리: ${item.categoryId} |
+                카테고리: ${item.category} |
                 등록일: ${item.createdAt}
             </div>
 
             <div class="mt-3 d-flex justify-content-end">
-                <a href="/news/detail?newsId=${item.newsId}"
+                <a href="/news/detail/${item.newsId}"
                    target="_blank"
                    class="btn btn-primary btn-sm open-btn">
                     기사 열기

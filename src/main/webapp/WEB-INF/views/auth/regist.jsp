@@ -174,6 +174,7 @@
     document.addEventListener("click", function(e) {
         if (e.target.classList.contains("category-tag")) {
             e.target.classList.toggle("active");
+            updateCategoryInputs();
         }
     });
 

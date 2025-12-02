@@ -80,22 +80,34 @@
                     </c:if>
                 </a>
 
-                <!-- 드롭다운 -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                        <li><a href="/bookmark/findAllBookMark?userInfoId=${userId}"
-                               onclick="window.open(this.href, 'bookmarkList', 'width=500,height=700'); return false;">
+               <!-- 드롭다운 -->
+               <div class="dropdown">
+                   <button class="btn btn-outline-secondary" id="dropdownMenuButton"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                       <i class="bi bi-list"></i>
+                   </button>
+
+                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+
+                       <!-- 북마크 보기 (통일된 UI + 새창) -->
+                       <li>
+                           <a class="dropdown-item"
+                              href="/bookmark/findAllBookMark?userId=${userId}"
+                              onclick="window.open(this.href, 'bookmarkList', 'width=500,height=700'); return false;">
                                북마크 보기
-                            </a></li>
-                        <li><a class="dropdown-item" href="/regist">내 정보 수정</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
-                    </ul>
-                </div>
+                           </a>
+                       </li>
+
+                       <!-- 내 정보 수정 -->
+                       <li><a class="dropdown-item" href="/regist">내 정보 수정</a></li>
+
+                       <li><hr class="dropdown-divider"></li>
+
+                       <!-- 로그아웃 -->
+                       <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+                   </ul>
+               </div>
+
 
             </sec:authorize>
 
