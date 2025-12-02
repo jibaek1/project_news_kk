@@ -107,7 +107,7 @@ CREATE TABLE news (
 
 INSERT INTO news (title, content, url, category, thumbnail, is_write, published_at, view_count)
 VALUES
-('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '정치', NULL, 0, '11-21 10:23', 0),
+('첫 번째 뉴스 제목', '첫 번째 뉴스 본문 내용입니다.', 'https://news.example.com/1', '마켓+', NULL, 0, '11-21 10:23', 0),
 ('두 번째 뉴스 제목', '두 번째 뉴스 본문 내용입니다.', 'https://news.example.com/2', '정치', NULL, 0, '11-21 11:01', 0),
 ('세 번째 뉴스 제목', '세 번째 뉴스 본문 내용입니다.', 'https://news.example.com/3', '정치', NULL, 0, '11-21 08:55', 0);
 
