@@ -11,6 +11,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -145,7 +146,9 @@ public class NewsService {
     }
 
     // 상세보기
+    @Transactional
     public NewsResponse.FindById getNewsId(Long id) {
+        newsMapper.updateViewCount(id);
         return newsMapper.findById(id);
     }
 }

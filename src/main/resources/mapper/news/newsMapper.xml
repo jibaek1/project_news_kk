@@ -190,4 +190,10 @@
         </where>
     </select>
 
+    <update id="updateViewCount" parameterType="long">
+        UPDATE news
+        SET view_count = view_count + 1
+        WHERE news_id = #{id}
+    </update>
+
 </mapper>
