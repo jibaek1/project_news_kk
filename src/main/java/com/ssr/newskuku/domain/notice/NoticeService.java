@@ -26,7 +26,7 @@ public class NoticeService {
 
     private final NoticeMapper noticeMapper;
 
-    public List<NoticeResponse> getNoticeList(){
+    public List<NoticeResponse.List> getNoticeList(){
 
         return noticeMapper.findAll();
     }
