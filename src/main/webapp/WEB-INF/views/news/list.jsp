@@ -56,18 +56,25 @@
             <!-- 1. 카테고리 -->
             <div class="filter-row d-flex align-items-center flex-wrap">
                 <div class="filter-label">카테고리 |</div>
-                <div class="filter-option active">전체</div>
-                <div class="filter-option">정치</div>
-                <div class="filter-option">오락</div>
-                <div class="filter-option">경제</div>
-                <div class="filter-option">건강</div>
-                <div class="filter-option">IT</div>
+                <div class="filter-option" data-category="전체">전체</div>
+                <div class="filter-option" data-category="정치">정치</div>
+                <div class="filter-option" data-category="경제">경제</div>
+                <div class="filter-option" data-category="마켓+">마켓+</div>
+                <div class="filter-option" data-category="산업">산업</div>
+                <div class="filter-option" data-category="사회">사회</div>
+                <div class="filter-option" data-category="전국">전국</div>
+                <div class="filter-option" data-category="세계">세계</div>
+                <div class="filter-option" data-category="문화">문화</div>
+                <div class="filter-option" data-category="건강">건강</div>
+                <div class="filter-option" data-category="연예">연예</div>
+                <div class="filter-option" data-category="스포츠">스포츠</div>
             </div>
 
 
             <!-- 3. 검색바 -->
             <div class="search-bar mb-4">
                 <form method="get" action="/news" class="d-flex gap-2">
+                    <input type="hidden" name="category" id="categoryInput" value="${currentCategory}">
                     <input class="form-control" type="text" name="keyword" placeholder="제목으로 검색" value="${keyword}" />
                     <button class="btn btn-primary" type="submit">검색</button>
                 </form>
@@ -126,7 +133,7 @@
                         <c:if test="${currentPage > 0}">
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="/news?page=${currentPage - 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                   href="/news?page=${currentPage - 1}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
                                     이전
                                 </a>
                             </li>
@@ -136,7 +143,7 @@
                         <c:forEach items="${pageLinks}" var="link">
                             <li class="page-item ${link.current ? 'active' : ''}">
                                 <a class="page-link"
-                                   href="/news?page=${link.index}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                   href="/news?page=${link.index}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
                                         ${link.number}
                                 </a>
                             </li>
@@ -146,7 +153,7 @@
                         <c:if test="${currentPage < totalPages - 1}">
                             <li class="page-item">
                                 <a class="page-link"
-                                   href="/news?page=${currentPage + 1}<c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                   href="/news?page=${currentPage + 1}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
                                     다음
                                 </a>
                             </li>
@@ -158,5 +165,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryOptions = document.querySelectorAll('.filter-option');
+        const categoryInput = document.getElementById('categoryInput');
+        const currentCategory = '${currentCategory}';
+
+        // 현재 카테고리에 active 클래스 추가
+        categoryOptions.forEach(option => {
+            if (option.dataset.category === currentCategory || (currentCategory === '' && option.dataset.category === '전체')) {
+                option.classList.add('active');
+            }
+            option.addEventListener('click', function () {
+                const selectedCategory = this.dataset.category;
+                window.location.href = '/news?category=' + selectedCategory;
+            });
+        });
+    });
+</script>
 
 <%@ include file="/WEB-INF/layout/footer.jsp" %>
