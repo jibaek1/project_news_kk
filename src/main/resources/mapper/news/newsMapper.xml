@@ -95,8 +95,8 @@
             thumbnail,
             category,
             view_count as viewCount,
-            FORMATDATETIME(created_at, 'yyyy-MM-dd HH:mm') as createdAt,
-            FORMATDATETIME(modified_at, 'yyyy-MM-dd HH:mm') as modifiedAt
+            DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as createdAt,
+            DATE_FORMAT(modified_at, '%Y-%m-%d %H:%i') as modifiedAt
         FROM news
         WHERE news_id = #{id}
     </select>

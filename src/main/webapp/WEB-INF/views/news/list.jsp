@@ -132,8 +132,16 @@
                         <!-- 이전 페이지 -->
                         <c:if test="${currentPage > 0}">
                             <li class="page-item">
-                                <a class="page-link"
-                                   href="/news?page=${currentPage - 1}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                <c:url value="/news" var="prevUrl">
+                                    <c:param name="page" value="${currentPage - 1}" />
+                                    <c:if test="${not empty currentCategory}">
+                                        <c:param name="category" value="${currentCategory}" />
+                                    </c:if>
+                                    <c:if test="${not empty keyword}">
+                                        <c:param name="keyword" value="${keyword}" />
+                                    </c:if>
+                                </c:url>
+                                <a class="page-link" href="${prevUrl}">
                                     이전
                                 </a>
                             </li>
@@ -142,8 +150,16 @@
                         <!-- Block pageLinks 출력 -->
                         <c:forEach items="${pageLinks}" var="link">
                             <li class="page-item ${link.current ? 'active' : ''}">
-                                <a class="page-link"
-                                   href="/news?page=${link.index}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                <c:url value="/news" var="pageLinkUrl">
+                                    <c:param name="page" value="${link.index}" />
+                                    <c:if test="${not empty currentCategory}">
+                                        <c:param name="category" value="${currentCategory}" />
+                                    </c:if>
+                                    <c:if test="${not empty keyword}">
+                                        <c:param name="keyword" value="${keyword}" />
+                                    </c:if>
+                                </c:url>
+                                <a class="page-link" href="${pageLinkUrl}">
                                         ${link.number}
                                 </a>
                             </li>
@@ -152,8 +168,16 @@
                         <!-- 다음 페이지 (길이가 아니라 총 페이지수 기준으로 체크) -->
                         <c:if test="${currentPage < totalPages - 1}">
                             <li class="page-item">
-                                <a class="page-link"
-                                   href="/news?page=${currentPage + 1}<c:if test='${not empty currentCategory}'>&category=${currentCategory}</c:if><c:if test='${not empty keyword}'>&keyword=${keyword}</c:if>">
+                                <c:url value="/news" var="nextUrl">
+                                    <c:param name="page" value="${currentPage + 1}" />
+                                    <c:if test="${not empty currentCategory}">
+                                        <c:param name="category" value="${currentCategory}" />
+                                    </c:if>
+                                    <c:if test="${not empty keyword}">
+                                        <c:param name="keyword" value="${keyword}" />
+                                    </c:if>
+                                </c:url>
+                                <a class="page-link" href="${nextUrl}">
                                     다음
                                 </a>
                             </li>
@@ -179,7 +203,7 @@
             }
             option.addEventListener('click', function () {
                 const selectedCategory = this.dataset.category;
-                window.location.href = '/news?category=' + selectedCategory;
+                window.location.href = '/news?category=' + encodeURIComponent(selectedCategory);
             });
         });
     });
