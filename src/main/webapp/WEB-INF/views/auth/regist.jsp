@@ -158,7 +158,7 @@
 </div>
 
 
-<!-- 이미지 미리보기 스크립트 -->
+<!-- 이미지 미리보기 스크립트 -->:
 <script>
     function previewImage(event) {
         const reader = new FileReader();
