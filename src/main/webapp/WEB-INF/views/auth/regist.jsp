@@ -168,7 +168,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    // 카테고리 선택 토글 및 hidden input 생성
+    // 카테고리 선택 토글
     const categoryInputsDiv = document.getElementById('categoryInputs');
 
     document.addEventListener("click", function(e) {
@@ -177,11 +177,10 @@
         }
     });
 
+    // hidden inputs 생성 함수
     function updateCategoryInputs() {
-        // 기존 hidden inputs 제거
         categoryInputsDiv.innerHTML = '';
 
-        // 선택된 카테고리들의 hidden input 생성
         document.querySelectorAll('.category-tag.active').forEach(tag => {
             const categoryId = tag.getAttribute('data-category-id');
             const input = document.createElement('input');
@@ -192,16 +191,13 @@
         });
     }
 
-    // 폼 제출 시 카테고리 선택 검증 및 hidden input 최종 업데이트
+    // 폼 제출 시 검증
     document.querySelector('form').addEventListener('submit', function(e) {
-        // 폼 제출 직전에, 현재 활성화된 카테고리를 기준으로 hidden input을 다시 생성합니다.
         updateCategoryInputs();
 
         const selectedCategories = document.querySelectorAll('.category-tag.active');
         if (selectedCategories.length === 0) {
             e.preventDefault();
-        if (selectedCategories.length === 0) {
-            e.preventDefault(); // 폼 제출 중단
             alert('관심 카테고리를 최소 1개 이상 선택해주세요.');
         }
     });
