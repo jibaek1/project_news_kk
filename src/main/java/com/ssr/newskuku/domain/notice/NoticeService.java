@@ -1,22 +1,16 @@
 package com.ssr.newskuku.domain.notice;
 
 
-
-import com.solapi.sdk.SolapiClient;
-import com.solapi.sdk.message.exception.SolapiMessageNotReceivedException;
-import com.solapi.sdk.message.model.Message;
-import com.solapi.sdk.message.service.DefaultMessageService;
 import com.ssr.newskuku.domain.notice.dto.NoticeResponse;
-
+import com.ssr.newskuku.domain.notice.dto.PageResult;
 import com.ssr.newskuku.domain.notice.mapper.NoticeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -26,9 +20,21 @@ public class NoticeService {
 
     private final NoticeMapper noticeMapper;
 
-    public List<NoticeResponse.List> getNoticeList(){
+    public PageResult<NoticeResponse.List> getNoticePage(int page, int size) {
 
-        return noticeMapper.findAll();
+        int offset = page * size;
+
+        List<NoticeResponse.List> items =
+                noticeMapper.findPage(Map.of("offset", offset, "size", size));
+
+        int totalCount = noticeMapper.getTotalCount();
+
+        return new PageResult<>(items, page, size, totalCount);
     }
+
+    public NoticeResponse.Detail findById(Long id) {
+        return noticeMapper.findById(id);
+    }
+
 
 }

@@ -6,7 +6,7 @@ CREATE TABLE notice (
     view_count INT DEFAULT 0,
     is_visible BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO notice(title, content)

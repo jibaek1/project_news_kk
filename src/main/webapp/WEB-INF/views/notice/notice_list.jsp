@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%--  상단 헤더 --%>
 <%@ include file="/WEB-INF/layout/header.jsp" %>
 
@@ -35,6 +37,7 @@
                                     ${notice.title}
                                 </a>
                             </td>
+
                             <td>${notice.createdAt}</td>
                             <td>${notice.viewCount}</td>
                         </tr>
@@ -45,25 +48,44 @@
             <!-- ===================== 페이징 ===================== -->
             <nav class="mt-4">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link">«</a>
-                    </li>
 
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
+                    <!-- 이전 버튼 -->
+                    <c:choose>
+                        <c:when test="${hasPrevious}">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=${currentPage - 1}">«</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item disabled">
+                                <a class="page-link">«</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
 
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
+                    <!-- 페이지 번호 -->
+                    <c:forEach begin="0" end="${totalPages - 1}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}">
+                                ${i + 1}
+                            </a>
+                        </li>
+                    </c:forEach>
 
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
+                    <!-- 다음 버튼 -->
+                    <c:choose>
+                        <c:when test="${hasNext}">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=${currentPage + 1}">»</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item disabled">
+                                <a class="page-link">»</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
 
-                    <li class="page-item">
-                        <a class="page-link">»</a>
-                    </li>
                 </ul>
             </nav>
 
@@ -72,4 +94,5 @@
 
     <%-- 하단 푸터 --%>
     <%@ include file="/WEB-INF/layout/footer.jsp" %>
+
 </div>
