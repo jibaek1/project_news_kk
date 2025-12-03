@@ -74,7 +74,6 @@
     <div class="notice-info">
         <span>📅 작성일: ${notice.createdAt}</span>
         <span>✏ 수정일: ${notice.modifiedAt}</span>
-        <span>👁 조회수: ${notice.viewCount}</span>
     </div>
 
     <div class="notice-content">

@@ -11,6 +11,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,13 +43,16 @@ public class NewsService {
     );
 
     // 뉴스 카테고리별 처리 크롤링 처리
-    public void crawlAllCategoriesLatestNews() {
+    public void crawlAllCategoriesLatestNews() throws InterruptedException {
 
         int maxPage = 15;
         int totalSaved = 0;
 
         for (String categoryUrl : categoryUrls) {
             totalSaved += crawlCategory(categoryUrl, maxPage);
+
+            // ✅ 카테고리 간 딜레이 (5~10초)
+            Thread.sleep(5000 + (int)(Math.random() * 5000));
         }
 
         System.out.println("총 " + totalSaved + "개 기사 저장");

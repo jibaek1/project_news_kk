@@ -69,7 +69,7 @@ public class NewsController {
 
     // 모든 카테고리 최신기사 크롤링 테스트
     @GetMapping("/admin/news/crawl-all")
-    public String crawlAllCategories() {
+    public String crawlAllCategories() throws InterruptedException {
         newsService.crawlAllCategoriesLatestNews();
         return "모든 카테고리 크롤링 시작!";
     }

@@ -22,7 +22,6 @@
                         <th style="width: 80px;">ID</th>
                         <th>제목</th>
                         <th style="width: 150px;">작성일</th>
-                        <th style="width: 80px;">조회수</th>
                     </tr>
                 </thead>
 

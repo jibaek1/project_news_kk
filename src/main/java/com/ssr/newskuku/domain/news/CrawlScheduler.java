@@ -13,7 +13,7 @@ public class CrawlScheduler {
     private final NewsService newsService;
 
     @Scheduled(cron = "0 5 0 * * *") // 매일 00:05 실행
-    public void crawlYesterdayNews() {
+    public void crawlYesterdayNews() throws InterruptedException {
         log.info("=== 어제 뉴스 크롤링 시작 ===");
         newsService.crawlAllCategoriesLatestNews();
         log.info("=== 어제 뉴스 크롤링 끝 ===");
