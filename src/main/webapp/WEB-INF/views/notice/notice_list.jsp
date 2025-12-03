@@ -36,9 +36,7 @@
                                     ${notice.title}
                                 </a>
                             </td>
-
                             <td>${notice.createdAt}</td>
-                            <td>${notice.viewCount}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

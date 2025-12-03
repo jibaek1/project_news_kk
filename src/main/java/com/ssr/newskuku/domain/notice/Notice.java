@@ -14,10 +14,6 @@ public class Notice extends BaseEntity {
     private Long noticeId;
     private String title;
     private String content;
-    private Integer viewCount;
     private Boolean isVisible;
 
-    public void increaseViewCount() {
-        this.viewCount++;
-    }
 }

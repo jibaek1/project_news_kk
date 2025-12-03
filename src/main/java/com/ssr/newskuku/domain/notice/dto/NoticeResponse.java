@@ -13,7 +13,6 @@ public class NoticeResponse {
         private Long noticeId;
         private String title;
         private String content;
-        private Integer viewCount;
         private boolean isVisible;
         private String createdAt;
         private String modifiedAt;
@@ -26,7 +25,6 @@ public class NoticeResponse {
         private Long noticeId;
         private String title;
         private String content;     // 전체 내용
-        private Integer viewCount;
         private boolean isVisible;
         private String createdAt;
         private String modifiedAt;

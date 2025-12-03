@@ -10,7 +10,6 @@
         SELECT notice_id,
         title,
         content,
-        view_count,
         is_visible,
         created_at,
         updated_at
@@ -26,7 +25,6 @@
         SELECT notice_id      AS noticeId,
         title,
         content,
-        view_count     AS viewCount,
         is_visible     AS isVisible,
         created_at     AS createdAt,
         modified_at    AS modifiedAt
@@ -41,7 +39,6 @@
         SELECT notice_id AS noticeId,
         title,
         content,
-        view_count AS viewCount,
         is_visible AS isVisible,
         created_at AS createdAt,
         modified_at AS modifiedAt
