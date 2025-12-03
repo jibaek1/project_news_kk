@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/layout/header.jsp" %>
 
 <style>
-/* 🔥 섹션 타이틀 */
+/* 섹션 타이틀 */
 .section-title {
     font-weight: 700;
     font-size: 1.5rem;
@@ -13,7 +13,7 @@
     padding-bottom: 6px;
 }
 
-/* 🔥 전체 길이 구분선 */
+/* 전체 길이 구분선 */
 .section-title::after {
     content: "";
     position: absolute;
@@ -43,7 +43,7 @@
     <div class="page-content">
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
-                <h3 class="section-title">🔥 현재 인기있는 게시물</h3>
+                <h3 class="section-title">현재 인기있는 게시물</h3>
 
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
 
@@ -69,7 +69,7 @@
         <!-- ====================== 내 관심사 관련 ====================== -->
         <section class="py-5 bg-light">
             <div class="container px-4 px-lg-5 mt-5">
-                <h3 class="section-title">🎯 내 관심사와 관련된 게시물</h3>
+                <h3 class="section-title">내 관심사와 관련된 게시물</h3>
 
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
 

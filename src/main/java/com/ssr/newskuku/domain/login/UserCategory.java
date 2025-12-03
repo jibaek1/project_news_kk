@@ -16,5 +16,5 @@ public class UserCategory extends BaseEntity {
 
     private Long userCategoryId;
     private Long userId;
-    private Long categoryId;
+    private String category;
 }

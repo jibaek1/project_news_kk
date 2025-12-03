@@ -51,10 +51,10 @@
 
     <!-- 여러 관심 카테고리 일괄 추가 -->
     <insert id="insertBatch">
-        INSERT INTO user_category (user_id, category_id, created_at, modified_at)
+        INSERT INTO user_category (user_id, category, created_at, modified_at)
         VALUES
-        <foreach collection="categoryIds" item="categoryId" separator=",">
-            (#{userId}, #{categoryId}, NOW(), NOW())
+        <foreach collection="categories" item="category" separator=",">
+            (#{userId}, #{category}, NOW(), NOW())
         </foreach>
     </insert>
 

@@ -133,8 +133,8 @@ public class UserService {
         userInfoMapper.update(userInfo);
 
         // 카테고리 업데이트
-        if (request.getCategoryIds() != null && !request.getCategoryIds().isEmpty()) {
-            updateUserCategories(userId, request.getCategoryIds());
+        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+            updateUserCategories(userId, request.getCategories());
         }
 
         log.info("사용자 추가 정보 업데이트 완료: userId={}", userId);
@@ -144,16 +144,16 @@ public class UserService {
      * 사용자 관심 카테고리 업데이트
      */
     @Transactional
-    public void updateUserCategories(Long userId, List<Long> categoryIds) {
+    public void updateUserCategories(Long userId, List<String> categories) {
         // 기존 카테고리 삭제
         userCategoryMapper.deleteAllByUserId(userId);
 
         // 새 카테고리 등록
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            userCategoryMapper.insertBatch(userId, categoryIds);
+        if (categories != null && !categories.isEmpty()) {
+            userCategoryMapper.insertBatch(userId, categories);
         }
 
-        log.info("사용자 관심 카테고리 업데이트 완료: userId={}, count={}", userId, categoryIds.size());
+        log.info("사용자 관심 카테고리 업데이트 완료: userId={}, count={}", userId, categories.size());
     }
 
     /**

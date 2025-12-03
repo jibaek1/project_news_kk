@@ -4,6 +4,7 @@ import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.login.UserService;
 import com.ssr.newskuku.domain.login.dto.UserRequest;
 import com.ssr.newskuku.domain.login.dto.UserResponse;
+import com.ssr.newskuku.domain.news.NewsService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     private final UserService userService;
+    private final NewsService newsService;
 
     @GetMapping
     public String index() {
+
         return "index";
     }
 

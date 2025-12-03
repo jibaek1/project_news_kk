@@ -33,7 +33,7 @@ public class UserRequest {
         private String gender;
         private String nickname;
         private String phoneNumber;
-        private List<Long> categoryIds;
+        private List<String> categories;
     }
 
     @Getter
@@ -71,6 +71,6 @@ public class UserRequest {
         private String gender;
         private String nickname;
         private String phoneNumber;
-        private List<Long> categoryIds;
+        private List<String> categories;
     }
 }

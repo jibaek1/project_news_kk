@@ -129,17 +129,17 @@
 
                 <!-- 실제 categoryIds로 전송 -->
                 <div class="d-flex flex-wrap">
-                    <span class="category-tag" data-category-id="1">정치</span>
-                    <span class="category-tag" data-category-id="2">경제</span>
-                    <span class="category-tag" data-category-id="3">마켓+</span>
-                    <span class="category-tag" data-category-id="4">산업</span>
-                    <span class="category-tag" data-category-id="5">사회</span>
-                    <span class="category-tag" data-category-id="6">전국</span>
-                    <span class="category-tag" data-category-id="7">세계</span>
-                    <span class="category-tag" data-category-id="8">문화</span>
-                    <span class="category-tag" data-category-id="9">건강</span>
-                    <span class="category-tag" data-category-id="10">연예</span>
-                    <span class="category-tag" data-category-id="11">스포츠</span>
+                    <span class="category-tag" data-category="정치">정치</span>
+                    <span class="category-tag" data-category="경제">경제</span>
+                    <span class="category-tag" data-category="마켓">마켓+</span>
+                    <span class="category-tag" data-category="산업">산업</span>
+                    <span class="category-tag" data-category="사회">사회</span>
+                    <span class="category-tag" data-category="전국">전국</span>
+                    <span class="category-tag" data-category="세계">세계</span>
+                    <span class="category-tag" data-category="문화">문화</span>
+                    <span class="category-tag" data-category="건강">건강</span>
+                    <span class="category-tag" data-category="연예">연예</span>
+                    <span class="category-tag" data-category="스포츠">스포츠</span>
                 </div>
 
                 <!-- 선택된 카테고리 ID를 저장할 hidden inputs -->
@@ -183,11 +183,11 @@
         categoryInputsDiv.innerHTML = '';
 
         document.querySelectorAll('.category-tag.active').forEach(tag => {
-            const categoryId = tag.getAttribute('data-category-id');
+            const categories = tag.getAttribute('data-category');
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'categoryIds';
-            input.value = categoryId;
+            input.name = 'categories';
+            input.value = categories;
             categoryInputsDiv.appendChild(input);
         });
     }

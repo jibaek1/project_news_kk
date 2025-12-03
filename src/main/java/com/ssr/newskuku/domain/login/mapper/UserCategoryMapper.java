@@ -34,7 +34,7 @@ public interface UserCategoryMapper {
      * 여러 관심 카테고리 일괄 추가
      */
     void insertBatch(@Param("userId") Long userId,
-                     @Param("categoryIds") List<Long> categoryIds);
+                     @Param("categories") List<String> categories);
 
     /**
      * 카테고리 이름으로 여러 관심 카테고리 일괄 추가
@@ -63,10 +63,10 @@ public interface UserCategoryMapper {
      * 트랜잭션 처리 필요
      */
     default void replaceAll(@Param("userId") Long userId,
-                            @Param("categoryIds") List<Long> categoryIds) {
+                            @Param("categoryIds") List<String> categories) {
         deleteAllByUserId(userId);
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            insertBatch(userId, categoryIds);
+        if (categories != null && !categories.isEmpty()) {
+            insertBatch(userId, categories);
         }
     }
 
