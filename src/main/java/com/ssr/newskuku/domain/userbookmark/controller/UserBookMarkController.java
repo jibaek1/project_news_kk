@@ -3,6 +3,8 @@ package com.ssr.newskuku.domain.userbookmark.controller;
 import com.ssr.newskuku._global.common.Define;
 import com.ssr.newskuku._global.common.PageLink;
 import com.ssr.newskuku._global.common.PageUtils;
+import com.ssr.newskuku.domain.login.UserAccount;
+import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.userbookmark.UserBookMarkService;
 import com.ssr.newskuku.domain.userbookmark.dto.UserBookMarkResponse;
 import jakarta.servlet.http.HttpSession;
@@ -38,10 +40,19 @@ public class UserBookMarkController {
     public String getFindAllList(@RequestParam Long userId,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size,
+                                 HttpSession session,
                                  Model model) {
 
+        UserInfo sessionUser = (UserInfo) session.getAttribute(Define.SESSION_USER);
+
+        if (sessionUser == null) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        Long sessionUserId = sessionUser.getUserId();
+
         List<UserBookMarkResponse.FindAll> list =
-                userBookMarkService.findAllBookMark(userId, page, size);
+                userBookMarkService.findAllBookMark(sessionUserId, userId, page, size);
 
         int total = userBookMarkService.count(userId);
         List<PageLink> pageLinks = PageUtils.createPageLinks(page, size, total);
@@ -50,7 +61,7 @@ public class UserBookMarkController {
         model.addAttribute("pageLinks", pageLinks);
         model.addAttribute("currentPage", page);
 
-        return "bookmarkList/bookmarkList"; // JSP 경로
+        return "bookmarkList/bookmarkList";
     }
 }
 
