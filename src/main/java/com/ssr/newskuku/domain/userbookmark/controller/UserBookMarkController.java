@@ -3,6 +3,8 @@ package com.ssr.newskuku.domain.userbookmark.controller;
 import com.ssr.newskuku._global.common.Define;
 import com.ssr.newskuku._global.common.PageLink;
 import com.ssr.newskuku._global.common.PageUtils;
+import com.ssr.newskuku.domain.login.UserAccount;
+import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.userbookmark.UserBookMarkService;
 import com.ssr.newskuku.domain.userbookmark.dto.UserBookMarkResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,33 +26,42 @@ public class UserBookMarkController {
     @PostMapping("/toggle")
     @ResponseBody
     public boolean toggle(@RequestParam Long newsId,
-                          @RequestParam Long userInfoId, HttpSession session) {
+                          @RequestParam Long userId, HttpSession session) {
 
         Long sessionUserId = (Long) session.getAttribute(Define.SESSION_USER);
         if (sessionUserId == null) {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
 
-        return userBookMarkService.toggle(userInfoId, newsId);
+        return userBookMarkService.toggle(userId, newsId);
     }
 
     @GetMapping("/findAllBookMark")
-    public String getFindAllList(@RequestParam Long userInfoId,
+    public String getFindAllList(@RequestParam Long userId,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size,
+                                 HttpSession session,
                                  Model model) {
 
-        List<UserBookMarkResponse.FindAll> list =
-                userBookMarkService.findAllBookMark(userInfoId, page, size);
+        UserInfo sessionUser = (UserInfo) session.getAttribute(Define.SESSION_USER);
 
-        int total = userBookMarkService.count(userInfoId);
+        if (sessionUser == null) {
+            throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+
+        Long sessionUserId = sessionUser.getUserId();
+
+        List<UserBookMarkResponse.FindAll> list =
+                userBookMarkService.findAllBookMark(sessionUserId, userId, page, size);
+
+        int total = userBookMarkService.count(userId);
         List<PageLink> pageLinks = PageUtils.createPageLinks(page, size, total);
 
         model.addAttribute("list", list);
         model.addAttribute("pageLinks", pageLinks);
         model.addAttribute("currentPage", page);
 
-        return "bookmark/bookmarkList"; // JSP 경로
+        return "bookmarkList/bookmarkList";
     }
 }
 

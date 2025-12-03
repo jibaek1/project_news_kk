@@ -90,30 +90,6 @@
             </div>
         </section>
 
-
-        <!-- ====================== 커뮤니티 인기 ====================== -->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h3 class="section-title">💬 커뮤니티 인기 게시물</h3>
-
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
-
-                    <div class="col mb-5">
-                        <div class="card custom-card h-100 shadow-sm">
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/ced4da/6c757d" alt="">
-                            <div class="card-body p-4 text-center">
-                                <h5 class="fw-bolder">커뮤니티 제목 예시</h5>
-                                <p class="text-muted small">설명 텍스트</p>
-                            </div>
-                            <div class="text-center pb-3">
-                                <a class="btn btn-outline-secondary mt-auto" href="#">바로가기</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
     </div>
 
     <%@ include file="/WEB-INF/layout/footer.jsp" %>

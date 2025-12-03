@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class AdminExceptionHandler {
 
     @ExceptionHandler
-    public String ex400(AdminException400 e, HttpServletRequest request) {
+    public String ex400(Exception400 e, HttpServletRequest request) {
         log.warn("=== 400 Bad Request 에러 발생 ===");
         log.warn("요청 URL : {}", request.getRequestURL());
         log.warn("인증 오류: {}", e.getMessage());
@@ -34,8 +34,8 @@ public class AdminExceptionHandler {
 //        return "err/401";
 //    }
 
-	@ExceptionHandler(AdminException401.class)
-	public String ex401ByData(AdminException401 e, HttpServletRequest request) {
+	@ExceptionHandler(Exception401.class)
+	public String ex401ByData(Exception401 e, HttpServletRequest request) {
 		log.warn("=== 401 UnAuthorized 에러 발생 ===");
 		log.warn("요청 URL : {}", request.getRequestURL());
 		log.warn("인증 오류: {}", e.getMessage());
@@ -46,8 +46,8 @@ public class AdminExceptionHandler {
 
 
 
-    @ExceptionHandler(AdminException403.class)
-    public String ex403(AdminException403 e, HttpServletRequest request) {
+    @ExceptionHandler(Exception403.class)
+    public String ex403(Exception403 e, HttpServletRequest request) {
 
         log.warn("=== 403 Forbidden 에러 발생 ===");
         log.warn("요청 URL : {}", request.getRequestURL());
@@ -58,8 +58,8 @@ public class AdminExceptionHandler {
         return "error/403";
     }
 
-    @ExceptionHandler(AdminException404.class)
-    public String ex404(AdminException404 e, HttpServletRequest request) {
+    @ExceptionHandler(Exception404.class)
+    public String ex404(Exception404 e, HttpServletRequest request) {
         log.warn("=== 404 Not Found 에러 발생 ===");
         System.out.println("=== 404 예외 핸들러 진입 1===");
         log.warn("요청 URL : {}", request.getRequestURL());
@@ -69,8 +69,8 @@ public class AdminExceptionHandler {
         return "error/404";
     }
 
-    @ExceptionHandler(AdminException500.class)
-    public String ex401(AdminException500 e, HttpServletRequest request) {
+    @ExceptionHandler(Exception500.class)
+    public String ex401(Exception500 e, HttpServletRequest request) {
         log.warn("=== 500 Internal Server Error 에러 발생 ===");
         log.warn("요청 URL : {}", request.getRequestURL());
         log.warn("인증 오류: {}", e.getMessage());

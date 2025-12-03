@@ -1,9 +1,9 @@
 package com.ssr.newskuku._global.errors.adminException;
 
 // 401 UnAuthorized 상황에서 사용할 커스텀 예외 클래스
-public class AdminException401 extends RuntimeException {
+public class Exception401 extends RuntimeException {
 
-    public AdminException401(String message) {
+    public Exception401(String message) {
         super(message);
     }
 

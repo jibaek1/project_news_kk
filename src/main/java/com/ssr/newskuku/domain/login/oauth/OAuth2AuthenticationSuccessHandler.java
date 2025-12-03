@@ -1,5 +1,6 @@
 package com.ssr.newskuku.domain.login.oauth;
 
+import com.ssr.newskuku._global.common.Define;
 import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.login.UserService;
 import jakarta.servlet.ServletException;
@@ -31,16 +32,22 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Long userId = (Long) oAuth2User.getAttributes().get("userId");
 
-        // 세션에 로그인 사용자 정보 저장
         UserInfo loginUser = userService.getUserInfo(userId);
-        HttpSession session = request.getSession();
-        session.setAttribute("loginUser", loginUser);
+        HttpSession session = request.getSession(true);
+
+
+        session.setAttribute(Define.SESSION_USER, loginUser);
+
 
 
         if (response.isCommitted()) {
             log.warn("Response already committed. Cannot redirect.");
             return;
         }
+
+//        session.setAttribute("userId", oAuth2User.getAttribute("userId"));
+//        session.setAttribute("oauthNickname", oAuth2User.getAttribute("oauthNickname"));
+//        session.setAttribute("oauthGender", oAuth2User.getAttribute("oauthGender"));
 
         if (oAuth2User.getAttributes().containsKey("needsAdditionalInfo") &&
                 (boolean) oAuth2User.getAttributes().get("needsAdditionalInfo")) {

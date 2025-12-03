@@ -37,7 +37,20 @@ public class UserBookMarkService {
     }
 
     // 북마크 전체 조회 기능
-    public List<UserBookMarkResponse.FindAll> findAllBookMark(Long userId, int page, int size) {
+    public List<UserBookMarkResponse.FindAll> findAllBookMark(
+            Long sessionUserId,
+            Long userId,
+            int page,
+            int size
+    ) {
+        if (sessionUserId == null) {
+            throw new IllegalArgumentException("로그인이 필요한 서비스입니다.");
+        }
+
+        if (!sessionUserId.equals(userId)) {
+            throw new IllegalArgumentException("권한이 없습니다. 본인만 조회할 수 있습니다.");
+        }
+
         int offset = page * size;
         return userBookMarkMapper.findAll(userId, size, offset);
     }

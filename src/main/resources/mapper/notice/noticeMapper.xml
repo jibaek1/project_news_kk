@@ -13,7 +13,7 @@
         view_count,
         is_visible,
         created_at,
-        modified_at
+        updated_at
         FROM notice
         ORDER BY notice_id DESC;
     </select>

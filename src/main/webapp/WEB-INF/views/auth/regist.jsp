@@ -158,7 +158,7 @@
 </div>
 
 
-<!-- 이미지 미리보기 스크립트 -->
+<!-- 이미지 미리보기 스크립트 -->:
 <script>
     function previewImage(event) {
         const reader = new FileReader();
@@ -168,7 +168,7 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 
-    // 카테고리 선택 토글 및 hidden input 생성
+    // 카테고리 선택 토글
     const categoryInputsDiv = document.getElementById('categoryInputs');
 
     document.addEventListener("click", function(e) {
@@ -178,11 +178,10 @@
         }
     });
 
+    // hidden inputs 생성 함수
     function updateCategoryInputs() {
-        // 기존 hidden inputs 제거
         categoryInputsDiv.innerHTML = '';
 
-        // 선택된 카테고리들의 hidden input 생성
         document.querySelectorAll('.category-tag.active').forEach(tag => {
             const categoryId = tag.getAttribute('data-category-id');
             const input = document.createElement('input');
@@ -193,8 +192,10 @@
         });
     }
 
-    // 폼 제출 시 카테고리 선택 검증
+    // 폼 제출 시 검증
     document.querySelector('form').addEventListener('submit', function(e) {
+        updateCategoryInputs();
+
         const selectedCategories = document.querySelectorAll('.category-tag.active');
         if (selectedCategories.length === 0) {
             e.preventDefault();

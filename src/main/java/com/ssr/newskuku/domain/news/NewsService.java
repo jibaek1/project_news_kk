@@ -149,7 +149,9 @@ public class NewsService {
     }
 
     // 상세보기
+    @Transactional
     public NewsResponse.FindById getNewsId(Long id) {
+        newsMapper.updateViewCount(id);
         return newsMapper.findById(id);
     }
 }
