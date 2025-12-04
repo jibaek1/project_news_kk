@@ -1,5 +1,6 @@
 package com.ssr.newskuku.domain.news.mapper;
 
+import com.ssr.newskuku.domain.login.UserCategory;
 import com.ssr.newskuku.domain.news.News;
 import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import org.apache.ibatis.annotations.Mapper;
@@ -47,5 +48,12 @@ public interface NewsMapper {
     int countByCriteria(@Param("category") String category, @Param("keyword") String keyword);
 
     void updateViewCount(Long id);
+
+    /** 인기 뉴스 조회 */
+    List<NewsResponse.FindAll> findPopularNews(@Param("limit") int limit);
+
+    /** 관심사 기반 뉴스 조회 */
+    List<NewsResponse.FindAll> findNewsByCategories(@Param("categories") List<String> categories,
+                                                    @Param("limit") int limit);
 
 }

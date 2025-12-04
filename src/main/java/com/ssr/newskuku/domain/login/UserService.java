@@ -31,6 +31,7 @@ public class UserService {
         }
 
         UserInfo info = userInfoMapper.findByUserId(userId);
+
         List<Long> categoryIds = userCategoryMapper.findCategoryIdsByUserId(userId);
 
         return new UserResponse.FullInfo(account, info, categoryIds);
@@ -248,6 +249,10 @@ public class UserService {
         if (info == null) {
             throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
         }
+
+        List<String> categories = userInfoMapper.findCategoryNamesByUserId(userId);
+        info.setCategories(categories);
+
         return info;
     }
 }

@@ -106,4 +106,7 @@ public interface UserInfoMapper {
      * 성별 사용자 수 통계
      */
     List<Map<String, Object>> countByGender();
+
+
+    List<String> findCategoryNamesByUserId(@Param("userId") Long userId);
 }

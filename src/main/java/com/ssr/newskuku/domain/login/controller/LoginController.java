@@ -1,16 +1,20 @@
 package com.ssr.newskuku.domain.login.controller;
 
+import com.ssr.newskuku.domain.login.UserCategory;
 import com.ssr.newskuku.domain.login.UserInfo;
 import com.ssr.newskuku.domain.login.UserService;
 import com.ssr.newskuku.domain.login.dto.UserRequest;
 import com.ssr.newskuku.domain.login.dto.UserResponse;
 import com.ssr.newskuku.domain.news.NewsService;
+import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -22,7 +26,35 @@ public class LoginController {
     private final NewsService newsService;
 
     @GetMapping
-    public String index() {
+    public String index(HttpSession session,
+                        Model model,
+                        @SessionAttribute(value = "loginUser", required = false) UserInfo loginUser) {
+
+        // 인기뉴스(4개)
+        List<NewsResponse.FindAll> popularNews = newsService.findPopularNews(4);
+        model.addAttribute("popularNewsList", popularNews);
+
+
+
+        // 관심사 기반 뉴스
+        if (loginUser != null) {
+
+            // 로그인 사용자 ID 가져오기
+            Long userId = loginUser.getUserId();
+
+            UserInfo userInfo = userService.getUserInfo(userId);
+
+            List<String> categories = userInfo.getCategories(); // List<String>
+
+            List<NewsResponse.FindAll> interestNews =
+                    newsService.findNewsByCategories(categories, 4);
+
+            model.addAttribute("interestNewsList", interestNews);
+
+        } else {
+            // 비로그인 사용자 → 관심사 리스트는 빈 값
+            model.addAttribute("interestNewsList", List.of());
+        }
 
         return "index";
     }

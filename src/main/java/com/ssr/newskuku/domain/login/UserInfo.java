@@ -27,5 +27,5 @@ public class UserInfo extends BaseEntity implements Serializable {
     private Gender gender;
     private String nickname;
     private String phoneNumber;
-    private List<UserCategory> categories;
+    private List<String> categories;
 }

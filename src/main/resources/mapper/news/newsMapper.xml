@@ -196,4 +196,52 @@
         WHERE news_id = #{id}
     </update>
 
+    <!-- ============================
+     인기 뉴스 조회 (4개)
+     view_count DESC → created_at DESC
+=============================== -->
+    <select id="findPopularNews"
+            resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">
+        SELECT
+        news_id AS newsId,
+        title,
+        content,
+        summary,
+        url,
+        thumbnail,
+        category,
+        created_at AS createdAt,
+        modified_at AS modifiedAt,
+        view_count AS viewCount
+        FROM news
+        ORDER BY view_count DESC, created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- ============================
+     관심사 기반 뉴스 조회 (4개)
+     category IN (...)
+=============================== -->
+    <select id="findNewsByCategories"
+            resultType="com.ssr.newskuku.domain.news.dto.NewsResponse$FindAll">
+        SELECT
+        news_id AS newsId,
+        title,
+        content,
+        summary,
+        url,
+        thumbnail,
+        category,
+        created_at AS createdAt,
+        modified_at AS ModifiedAt,
+        view_count AS viewCount
+        FROM news
+        WHERE category IN
+        <foreach item="cat" collection="categories" open="(" separator="," close=")">
+            #{cat}
+        </foreach>
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>

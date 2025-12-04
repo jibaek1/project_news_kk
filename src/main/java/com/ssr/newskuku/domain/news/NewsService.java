@@ -1,5 +1,6 @@
 package com.ssr.newskuku.domain.news;
 
+import com.ssr.newskuku.domain.login.UserCategory;
 import com.ssr.newskuku.domain.news.dto.NewsResponse;
 import com.ssr.newskuku.domain.news.mapper.NewsMapper;
 import lombok.RequiredArgsConstructor;
@@ -146,6 +147,19 @@ public class NewsService {
     // 전체불러오기
     public List<NewsResponse.FindAll> findAll(int offset, int limit) {
         return newsMapper.findAll(offset, limit);
+    }
+
+    // ======================= 인기 뉴스 =======================
+    public List<NewsResponse.FindAll> findPopularNews(int limit) {
+        return newsMapper.findPopularNews(limit);
+    }
+
+    // ======================= 관심사 기반 =======================
+    public List<NewsResponse.FindAll> findNewsByCategories(List<String> categories, int limit) {
+        if (categories == null || categories.isEmpty()) {
+            return List.of(); // 관심사가 없으면 빈 리스트 반환
+        }
+        return newsMapper.findNewsByCategories(categories, limit);
     }
 
     // 상세보기

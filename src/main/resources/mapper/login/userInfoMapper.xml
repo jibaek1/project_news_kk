@@ -203,4 +203,12 @@
         GROUP BY gender
     </select>
 
+    <select id="findCategoryNamesByUserId"
+            resultType="string"
+            parameterType="long">
+        SELECT uc.category
+        FROM user_category uc
+        WHERE uc.user_id = #{userId}
+    </select>
+
 </mapper>

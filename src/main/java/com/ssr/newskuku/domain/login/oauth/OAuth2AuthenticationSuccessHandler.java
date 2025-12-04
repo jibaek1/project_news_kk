@@ -35,10 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         UserInfo loginUser = userService.getUserInfo(userId);
         HttpSession session = request.getSession(true);
 
-
         session.setAttribute(Define.SESSION_USER, loginUser);
-
-
 
         if (response.isCommitted()) {
             log.warn("Response already committed. Cannot redirect.");
