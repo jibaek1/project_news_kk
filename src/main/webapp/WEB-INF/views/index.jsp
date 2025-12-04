@@ -64,7 +64,7 @@
                                     <p class="text-muted small">${news.summary}</p>
                                 </div>
                                 <div class="text-center pb-3">
-                                    <a class="btn btn-outline-dark mt-auto" href="/news/${news.newsId}">자세히 보기</a>
+                                    <a class="btn btn-outline-dark mt-auto" href="/news/detail/${news.newsId}">자세히 보기</a>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                                     <p class="text-muted small">${news.summary}</p>
                                 </div>
                                 <div class="text-center pb-3">
-                                    <a class="btn btn-outline-primary mt-auto" href="/news/${news.newsId}">보러가기</a>
+                                    <a class="btn btn-outline-primary mt-auto" href="/news/detail/${news.newsId}">보러가기</a>
                                 </div>
                             </div>
                         </div>
